@@ -84,7 +84,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Puzzles\DragCircleAvoidBlocks.cs" />
     <Compile Include="Puzzles\IPuzzle.cs" />
     <Compile Include="Puzzles\NumeralSearch.cs" />
   </ItemGroup>

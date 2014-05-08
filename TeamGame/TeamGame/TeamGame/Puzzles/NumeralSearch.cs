@@ -28,7 +28,7 @@ namespace TeamGame.Puzzles
         /// <param name="game">The game object associated with this puzzle.</param>
         /// <param name="player">The player who may complete this puzzle.</param>
         public NumeralSearch(Game game, Player player)
-            : base(game, player, player.GetRegion())
+            : base(game, player, PlayerE.GetRegion(player))
         {
             findSixes = Game1.random.Next(2) == 1;
             nPosition = new HashSet<int>();
