@@ -51,9 +51,9 @@ namespace TeamGame.Puzzles
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < columns; j++)
-                    spriteBatch.Draw(findSixes?nineTexture:sixTexture, offset.Plus(j * width, i * height), Color.White);
+                    spriteBatch.Draw(findSixes?nineTexture:sixTexture, offset.Plus(j * width, i * height), player.ColorOf());
             foreach (int i in nPosition)
-                spriteBatch.Draw(findSixes?sixTexture:nineTexture, offset.Plus((i % columns) * width, (int) (i / columns) * height), Color.White);
+                spriteBatch.Draw(findSixes?sixTexture:nineTexture, offset.Plus((i % columns) * width, (int) (i / columns) * height), player.ColorOf());
 
             spriteBatch.End();
         }

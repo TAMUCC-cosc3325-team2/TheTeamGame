@@ -21,6 +21,7 @@ namespace TeamGame
         Net net;
         public static Random random = new Random();
         public static Player localPlayer = Player.None;
+        string windowTitle;
 
         public Game1()
         {
@@ -29,6 +30,7 @@ namespace TeamGame
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 724;
             Content.RootDirectory = "Content";
+            windowTitle = "";
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace TeamGame
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            windowTitle = "Total bandwidth usage: " + Math.Round((net.client.Statistics.ReceivedBytes + net.client.Statistics.SentBytes) / gameTime.TotalGameTime.TotalMilliseconds, 3) + " kB/s";
             
 
             base.Update(gameTime);
@@ -89,7 +91,7 @@ namespace TeamGame
         {
             GraphicsDevice.Clear(Color.Black);
 
-            
+            Window.Title = windowTitle;
 
             base.Draw(gameTime);
         }
