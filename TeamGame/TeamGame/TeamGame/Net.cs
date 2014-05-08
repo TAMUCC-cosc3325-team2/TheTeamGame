@@ -39,7 +39,7 @@ namespace TeamGame
 
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
-                    pStates[p].puzzle = new Puzzles.NumeralSearch(Game, p);
+                    pStates[p].puzzle = new Puzzles.DragCircleAvoidBlocks(Game, p);
             //pStates[Player.t1p1].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p1);
             //pStates[Player.t1p2].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p2);
             //pStates[Player.t1p3].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p3);

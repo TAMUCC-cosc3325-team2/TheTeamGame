@@ -24,13 +24,13 @@ namespace TeamGame
                 return Color.Beige;
             switch ((int) p % 4)
             {
-                case 0:
-                    return Color.Red;
                 case 1:
-                    return Color.LawnGreen;
+                    return Color.Red;
                 case 2:
-                    return Color.Blue;
+                    return Color.Lime;
                 case 3:
+                    return Color.DeepSkyBlue;
+                case 0:
                     return Color.Yellow;
                 default:
                     return Color.Teal;
