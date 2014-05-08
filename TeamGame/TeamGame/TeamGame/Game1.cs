@@ -77,7 +77,7 @@ namespace TeamGame
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            windowTitle = "Total bandwidth usage: " + Math.Round((net.client.Statistics.ReceivedBytes + net.client.Statistics.SentBytes) / gameTime.TotalGameTime.TotalMilliseconds, 3) + " kB/s";
+            windowTitle = "Total average bandwidth usage: " + Math.Round((net.client.Statistics.ReceivedBytes + net.client.Statistics.SentBytes) / gameTime.TotalGameTime.TotalMilliseconds, 3) + " kB/s";
             
 
             base.Update(gameTime);
