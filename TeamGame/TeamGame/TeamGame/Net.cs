@@ -93,7 +93,7 @@ namespace TeamGame
         public void ParseData(NetIncomingMessage msg)
         {
             Player fromPlayer = (Player)msg.SequenceChannel;
-            if (!(fromPlayer > 0 && fromPlayer < (Player)17 && fromPlayer.IsLocal()))
+            if (!(fromPlayer > 0 && fromPlayer < (Player)17 && !fromPlayer.IsLocal()))
             {
                 if (msg.SequenceChannel == 20)
                 {
