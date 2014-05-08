@@ -86,6 +86,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Puzzles\IPuzzle.cs" />
     <Compile Include="Puzzles\NumeralSearch.cs" />
+    <Compile Include="Puzzles\Transition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
