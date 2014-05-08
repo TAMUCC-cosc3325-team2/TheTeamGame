@@ -21,9 +21,9 @@ namespace TeamGame
                 case Player.t1p1:
                     return Color.Red;
                 case Player.t1p2:
-                    return Color.LawnGreen;
+                    return Color.Lime;
                 case Player.t1p3:
-                    return Color.Blue;
+                    return Color.DeepSkyBlue;
                 case Player.t1p4:
                     return Color.Yellow;
                 default:
