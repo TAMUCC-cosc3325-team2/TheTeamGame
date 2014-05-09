@@ -38,7 +38,7 @@ namespace TeamGame
         /// </summary>
         public override void Initialize()
         {
-            this.cursorTexture = Game.Content.Load<Texture2D>("cursor");
+            this.cursorTexture = Game.Content.Load<Texture2D>("cursors/cursor");
 
             base.Initialize();
         }

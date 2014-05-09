@@ -100,7 +100,11 @@ namespace TeamGame
                 if (msg.SequenceChannel == 20)
                 {
                     Game1.localPlayer = (Player)msg.ReadByte();
-                    pStates[Game1.localPlayer].Visible = true;
+                    // pStates[Game1.localPlayer].Visible = true;
+                    Game.IsMouseVisible = true;
+                    System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
+                    System.Windows.Forms.Form winForm = ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Game.Window.Handle));
+                    winForm.Cursor = myCursor;
                 }
             }
             else

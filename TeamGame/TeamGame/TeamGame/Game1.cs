@@ -42,7 +42,6 @@ namespace TeamGame
         protected override void Initialize()
         {
             net = new Net(this);
-
             base.Initialize();
         }
 

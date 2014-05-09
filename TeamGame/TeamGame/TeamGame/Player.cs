@@ -38,6 +38,25 @@ namespace TeamGame
             }
             
         }
+        public static string ColorName(this Player p)
+        {
+            //if (p.TeamOf() != Game1.localPlayer.TeamOf())
+            //    return new String("Grey");
+            switch (Enum.GetName(typeof(Player), p)[3])
+            {
+                case '1':
+                    return "Red";
+                case '2':
+                    return "Green";
+                case '3':
+                    return "Blue";
+                case '4':
+                    return "Yellow";
+                default:
+                    return "None";
+            }
+
+        }
 
         public static bool IsLocal(this Player p)
         {

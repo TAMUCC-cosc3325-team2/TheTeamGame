@@ -22,8 +22,6 @@ namespace TeamGame.Puzzles
             ball2Pos = new Vector2(player.GetRegion().Width - 30, player.GetRegion().Height - 30);
             block1Pos = new Vector2(player.GetRegion().X + player.GetRegion().Width / 3, player.GetRegion().Y + player.GetRegion().Height / 3);
             block2Pos = new Vector2(player.GetRegion().X + player.GetRegion().Width * 2 / 3, player.GetRegion().Y + player.GetRegion().Height * 2 / 3);
-            this.Visible = true;
-
         }
 
         public override void Initialize()
