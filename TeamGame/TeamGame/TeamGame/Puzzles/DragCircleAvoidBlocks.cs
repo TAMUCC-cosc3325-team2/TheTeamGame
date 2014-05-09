@@ -17,7 +17,7 @@ namespace TeamGame.Puzzles
         Vector2 goalPos;
 
         public DragCircleAvoidBlocks(Game game, Player player)
-            : base(game, player, player.GetRegion())
+            : base(game, player)
         {
             backgroundPos = player.GetRegion().Location.ToVector2();
             goalPos = new Vector2(250 / 2 - 40, 175 - 30);

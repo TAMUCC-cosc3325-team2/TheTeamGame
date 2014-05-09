@@ -68,7 +68,12 @@ namespace TeamGame
             msg.Write((short)cursorPosition.X);
             msg.Write((short)cursorPosition.Y);
             if (puzzle != null)
+            {
+                msg.Write(puzzle.ID());
                 puzzle.Encode(msg);
+            }
+            else
+                msg.Write((byte)0);
         }
 
         public void Decode(Lidgren.Network.NetIncomingMessage msg)
@@ -76,8 +81,16 @@ namespace TeamGame
             this.Visible = true;
             cursorPosition.X = msg.ReadInt16();
             cursorPosition.Y = msg.ReadInt16();
-            if (puzzle != null)
-                puzzle.Decode(msg);
+            byte remotePuzzleType = msg.ReadByte();
+            if (puzzle.ID() != remotePuzzleType)
+            {
+                if (puzzle != null)
+                    Game.Components.Remove(puzzle);
+                puzzle = remotePuzzleType.CreateFromID(Game, player);
+            }
+
+                
+            puzzle.Decode(msg);
         }
     }
 }

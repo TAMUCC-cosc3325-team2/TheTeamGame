@@ -8,8 +8,8 @@ namespace TeamGame.Puzzles
 {
     class Transition : IPuzzle
     {
-        public Transition(Game game, Player player, Rectangle drawRegion)
-            : base(game, player, drawRegion)
+        public Transition(Game game, Player player)
+            : base(game, player)
         {
 
         }

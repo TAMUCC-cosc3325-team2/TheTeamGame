@@ -23,10 +23,10 @@ namespace TeamGame
         public Player player;
         public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
 
-        public IPuzzle(Game game, Player player, Rectangle drawRegion)
+        public IPuzzle(Game game, Player player)
             : base(game)
         {
-            this.drawRegion = drawRegion;
+            this.drawRegion = player.GetRegion();
             this.player = player;
 
             game.Components.Add(this);
@@ -45,5 +45,27 @@ namespace TeamGame
         public virtual void Decode(NetIncomingMessage msg) { throw new NotImplementedException(); }
 
         public virtual void PuzzleOver(bool Correct) {}
+    }
+    public static class IPuzzleHelper
+    {
+        public static Dictionary<Type, byte> map = new Dictionary<Type, byte>(){
+            { typeof(Puzzles.Transition), 1},
+            { typeof(Puzzles.NumeralSearch), 2},
+            { typeof(Puzzles.DragCircleAvoidBlocks), 3}
+            };
+
+        /// <summary>
+        /// Returns the unique ID for the type of puzzle
+        /// </summary>
+        /// <param name="puzzle">The puzzle</param>
+        /// <returns>0 if none, 1-255 if valid</returns>
+        public static byte ID(this IPuzzle puzzle)
+        {
+            return map[puzzle.GetType()];
+        }
+        public static IPuzzle CreateFromID(this byte puzzleID, Game game, Player player)
+        {
+            return (IPuzzle)Activator.CreateInstance(map.FirstOrDefault(pair => pair.Value == puzzleID).Key, new object[] { game, player });
+        }
     }
 }
