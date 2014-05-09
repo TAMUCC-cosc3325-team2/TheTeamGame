@@ -14,14 +14,19 @@ namespace TeamGame.Puzzles
         Vector2 backgroundPos, ball1Pos, ball2Pos, block1Pos, block2Pos;
         Texture2D background, ball, block1, block2;
 
+        Vector2 goalPos;
+
         public DragCircleAvoidBlocks(Game game, Player player)
             : base(game, player, player.GetRegion())
         {
             backgroundPos = player.GetRegion().Location.ToVector2();
-            ball1Pos = backgroundPos + new Vector2(30,30);
-            ball2Pos = new Vector2(player.GetRegion().Width - 30, player.GetRegion().Height - 30);
-            block1Pos = new Vector2(player.GetRegion().X + player.GetRegion().Width / 3, player.GetRegion().Y + player.GetRegion().Height / 3);
-            block2Pos = new Vector2(player.GetRegion().X + player.GetRegion().Width * 2 / 3, player.GetRegion().Y + player.GetRegion().Height * 2 / 3);
+            goalPos = new Vector2(250 / 2 - 40, 175 - 30);
+            ball1Pos = backgroundPos + new Vector2(4,0);
+            ball2Pos = new Vector2(player.GetRegion().Width - 34, player.GetRegion().Height - 30);
+            block1Pos = new Vector2(player.GetRegion().X + player.GetRegion().Width / 3, player.GetRegion().Y + player.GetRegion().Height / 4);
+            block2Pos = new Vector2(player.GetRegion().X + player.GetRegion().Width * 2 / 3, player.GetRegion().Y + player.GetRegion().Height * 3 / 5);
+            this.Visible = true;
+
         }
 
         public override void Initialize()
@@ -51,7 +56,7 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-            if (Mouse.GetState().LeftButton.IsClicked())
+            if ((ball1Pos - goalPos).Length() <= 5)
                 PuzzleOver(true);
 
         }
