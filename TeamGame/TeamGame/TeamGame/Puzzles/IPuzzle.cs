@@ -59,7 +59,8 @@ namespace TeamGame
             { typeof(Puzzles.Transition), 1},
             { typeof(Puzzles.NumeralSearch), 2},
             { typeof(Puzzles.DragCircleAvoidBlocks), 3},
-            { typeof(Puzzles.TextNamesColorOfCircle), 4}
+            { typeof(Puzzles.TextNamesColorOfCircle), 4},
+            { typeof(Puzzles.CreateASquare), 5}
             };
 
         /// <summary>

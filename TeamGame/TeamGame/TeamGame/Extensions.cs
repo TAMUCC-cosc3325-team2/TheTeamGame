@@ -79,4 +79,50 @@ namespace TeamGame
             return dx * dx + dy * dy < r * r;
         }
     }
+    /// <summary>
+    /// Enumeration to define the orientation of an object.
+    /// </summary>
+    public enum Orientation
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
+    public enum Status
+    {
+        Waiting,
+        Rotating
+    }
+
+    public class Triangle
+    {
+        Rectangle location;
+        int degrees;
+
+        public Status Stat
+        {
+            get;
+            set;
+        }
+
+        public Orientation Rot
+        {
+            get;
+            set;
+        }
+
+        public Rectangle Location
+        {
+            get;
+            set;
+        }
+
+        public int Degrees
+        {
+            get;
+            set;
+        }
+    }
 }
