@@ -91,10 +91,10 @@ namespace TeamGame.Puzzles
 
         public override void Decode(Lidgren.Network.NetIncomingMessage msg)
         {
-            msg.ReadByte(timesDisplayed);
-            msg.ReadByte((byte) ballColor);
-            msg.ReadByte((byte) textColor);
-            msg.ReadByte((byte) textWord);
+            timesDisplayed =      msg.ReadByte();
+            ballColor = (MyColor) msg.ReadByte();
+            textColor = (MyColor) msg.ReadByte();
+            textWord =  (MyColor) msg.ReadByte();
         }
     }
 

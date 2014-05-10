@@ -31,7 +31,7 @@ namespace TeamGame
                 case '1':
                     return Color.Red;
                 case '2':
-                    return Color.LawnGreen;
+                    return Color.OliveDrab;
                 case '3':
                     return Color.Blue;
                 case '4':
