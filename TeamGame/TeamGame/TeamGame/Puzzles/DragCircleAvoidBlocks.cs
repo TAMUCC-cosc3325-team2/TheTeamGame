@@ -65,7 +65,7 @@ namespace TeamGame.Puzzles
             : base(game, player)
         {
             backgroundRec = new Rectangle(0, 0, 250, 150);
-            goalRec = new Rectangle(110, 128, 22, 22);
+            goalRec = new Rectangle(90, 128, 22, 22);
             ball1Rec = new Rectangle(4, 0, 22, 22);
             ball2Rec = new Rectangle(223, 128, 22, 22);
             block1Rec = new Rectangle(220, 45, 70, 17);
@@ -263,8 +263,8 @@ namespace TeamGame.Puzzles
                     ball2Rec.X = rightWall2.Left - 22;
                 }
 
-                ball1Rec.X = backgroundRec.Right - 22 - ball1Rec.X;
-                ball1Rec.Y = backgroundRec.Bottom - 22 - ball1Rec.Y;
+                ball1Rec.X = backgroundRec.Right - 22 - ball2Rec.X;
+                ball1Rec.Y = backgroundRec.Bottom - 22 - ball2Rec.Y;
 
                 if (mouse.LeftButton == ButtonState.Released)
                     ball2State = ClickedState.Released;
@@ -299,8 +299,8 @@ namespace TeamGame.Puzzles
         {
             msg.Write((short)ball1Rec.X);
             msg.Write((short)ball1Rec.Y);
-            //msg.Write((short)ball2Pos.X); // can be computed from the ball1Pos
-            //msg.Write((short)ball2Pos.Y);
+            msg.Write((short)ball2Rec.X); // can be computed from the ball1Pos
+            msg.Write((short)ball2Rec.Y);
             msg.Write((short)block1Rec.X);
             msg.Write((short)block1Rec.Y);
             msg.Write((short)block2Rec.X);
@@ -311,8 +311,8 @@ namespace TeamGame.Puzzles
         {
             ball1Rec.X = msg.ReadInt16();
             ball1Rec.Y = msg.ReadInt16();
-            //ball2Pos.X = msg.ReadInt16();
-            //ball2Pos.Y = msg.ReadInt16();
+            ball2Rec.X = msg.ReadInt16();
+            ball2Rec.Y = msg.ReadInt16();
             block1Rec.X = msg.ReadInt16();
             block1Rec.Y = msg.ReadInt16();
             block2Rec.X = msg.ReadInt16();
