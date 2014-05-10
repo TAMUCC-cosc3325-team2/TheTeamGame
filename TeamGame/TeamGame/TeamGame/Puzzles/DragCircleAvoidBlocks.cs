@@ -33,6 +33,7 @@ namespace TeamGame.Puzzles
         SoundEffectInstance prompt;
 
         Rectangle goalRec;
+        Rectangle leftWall, topWall, bottomWall, rightWall, topPart, bottomPart;
         MouseState mouse;
 
         public ClickedState ball1State
@@ -63,11 +64,19 @@ namespace TeamGame.Puzzles
             : base(game, player)
         {
             backgroundRec = new Rectangle(0, 0, 250, 150);
-            goalRec = new Rectangle(90, 128, 22, 22);
+            goalRec = new Rectangle(110, 128, 22, 22);
             ball1Rec = new Rectangle(4, 0, 22, 22);
-            ball2Rec = new Rectangle(223, 128, 18, 18);
-            block1Rec = new Rectangle(180, 45, 70, 17);
+            ball2Rec = new Rectangle(223, 128, 22, 22);
+            block1Rec = new Rectangle(220, 45, 70, 17);
             block2Rec = new Rectangle(200, 83, 50, 17);
+
+            leftWall = new Rectangle(0, 0, 3, 141);
+            topWall = new Rectangle(28, 11, 87, 3);
+            rightWall = new Rectangle(114, 11, 3, 141);
+            bottomWall = new Rectangle(0, 138, 86, 3);
+            topPart = new Rectangle(28, 0, 3, 12);
+            bottomPart = new Rectangle(86, 138, 3, 12);
+            
             block1State = block2State = BlockState.Waiting;
             ball1State = ball2State = ClickedState.Released;
         }
@@ -177,19 +186,38 @@ namespace TeamGame.Puzzles
 
             if (ball1State == ClickedState.Clicked)
             {
-                ball1Rec.Location = new Point((int)relativePos.X - 9, (int)relativePos.Y - 9);
+                ball1Rec.Location = new Point((int)relativePos.X - 11, (int)relativePos.Y - 11);
 
-                if (ball1Rec.Bottom >= backgroundRec.Bottom)
-                    ball1Rec.Y = backgroundRec.Bottom - 18;
-                else if (ball1Rec.Top <= backgroundRec.Top)
+                if (ball1Rec.Bottom >= bottomWall.Top && ball1Rec.Left <= bottomPart.Right)
+                {
+                    if (ball1Rec.Left <= leftWall.Right)
+                        ball1Rec.X = leftWall.Right;
+                    ball1Rec.Y = bottomWall.Top - 22;
+                }
+                else if (ball1Rec.Left >= bottomPart.Right && ball1Rec.Bottom >= backgroundRec.Bottom)
+                    ball1Rec.Y = backgroundRec.Bottom - 21;
+                if (ball1Rec.Top <= topWall.Bottom && ball1Rec.X >= topPart.Left && ball1Rec.Right <= rightWall.Left)
+                {
+                    if (ball1Rec.Left <= rightWall.Left)
+                        ball1Rec.X = rightWall.Left;
+                }
+                else if (ball1Rec.Right <= topPart.Left && ball1Rec.Top <= backgroundRec.Top)
                     ball1Rec.Y = backgroundRec.Top;
-                if (ball1Rec.Right >= backgroundRec.Right)
-                    ball1Rec.X = backgroundRec.Right - 18;
-                else if (ball1Rec.Left <= backgroundRec.Left)
-                    ball1Rec.X = backgroundRec.Left;
+                if (ball1Rec.Left <= leftWall.Right)
+                {
+                    if (ball1Rec.Bottom >= bottomWall.Top)
+                        ball1Rec.Y = bottomWall.Top - 22;
+                    ball1Rec.X = leftWall.Right;
+                }
+                else if (ball1Rec.Right >= rightWall.Left)
+                {
+                    if (ball1Rec.Top <= topWall.Bottom)
+                        ball1Rec.Y = topWall.Bottom;
+                    ball1Rec.X = rightWall.Left - 21;
+                }
 
-                ball2Rec.X = backgroundRec.Right - 18 - ball1Rec.X;
-                ball2Rec.Y = backgroundRec.Bottom - 18 - ball1Rec.Y;
+                ball2Rec.X = backgroundRec.Right - 22 - ball1Rec.X;
+                ball2Rec.Y = backgroundRec.Bottom - 22 - ball1Rec.Y;
 
                 if (mouse.LeftButton == ButtonState.Released)
                     ball1State = ClickedState.Released;
@@ -197,30 +225,32 @@ namespace TeamGame.Puzzles
 
             else if (ball2State == ClickedState.Clicked)
             {
-                ball2Rec.Location = new Point((int)relativePos.X - 9, (int)relativePos.Y - 9);
+                ball2Rec.Location = new Point((int)relativePos.X - 11, (int)relativePos.Y - 11);
 
                 if (ball2Rec.Bottom >= backgroundRec.Bottom)
-                    ball2Rec.Y = backgroundRec.Bottom - 18;
+                    ball2Rec.Y = backgroundRec.Bottom - 22;
                 else if (ball2Rec.Top <= backgroundRec.Top)
                     ball2Rec.Y = backgroundRec.Top;
                 if (ball2Rec.Right >= backgroundRec.Right)
-                    ball2Rec.X = backgroundRec.Right - 18;
+                    ball2Rec.X = backgroundRec.Right - 22;
                 else if (ball2Rec.Left <= backgroundRec.Left)
                     ball2Rec.X = backgroundRec.Left;
 
-                ball1Rec.X = backgroundRec.Right - 18 - ball2Rec.X;
-                ball1Rec.Y = backgroundRec.Bottom - 18 - ball2Rec.Y;
+                ball1Rec.X = backgroundRec.Right - 22 - ball2Rec.X;
+                ball1Rec.Y = backgroundRec.Bottom - 22 - ball2Rec.Y;
 
                 if (mouse.LeftButton == ButtonState.Released)
                     ball2State = ClickedState.Released;
             }
+
+            
 
             if (block1Rec.Intersects(ball1Rec) || block1Rec.Intersects(ball2Rec))
                 PuzzleOver(false);
             else if (block2Rec.Intersects(ball1Rec) || block2Rec.Intersects(ball2Rec))
                 PuzzleOver(false);
 
-            if ((ball1Rec.Center.ToVector2() - goalRec.Center.ToVector2()).LengthSquared() <= 9)
+            if ((ball1Rec.Center.ToVector2() - goalRec.Center.ToVector2()).LengthSquared() <= 11)
                 PuzzleOver(true);
 
         }
