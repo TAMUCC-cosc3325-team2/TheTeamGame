@@ -16,6 +16,7 @@ namespace TeamGame.Puzzles
 
         MyColor ballColor, textColor, textWord;
         Texture2D ballTexture; // 50x50
+        SoundEffectInstance textNames;
 
         public TextNamesColorOfCircle(Game game, Player player)
             : base(game, player)
@@ -29,7 +30,10 @@ namespace TeamGame.Puzzles
             ballTexture = Game.Content.Load<Texture2D>("art/ball50px");
 
             if (player == Game1.localPlayer)
-                Game.Content.Load<SoundEffect>("audio/ClickWhenTheTextNames").Play(1.0f, 0.0f, 0.0f);
+            {
+                textNames = Game.Content.Load<SoundEffect>("audio/ClickWhenTheTextNames").CreateInstance();
+                textNames.Play();
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -70,6 +74,8 @@ namespace TeamGame.Puzzles
 
         public new void PuzzleOver(bool p)
         {
+            if (textNames.State == SoundState.Playing)
+                textNames.Dispose();
             if (p)
                 Game.Content.Load<SoundEffect>("audio/Correct").Play(1.0f, 0.0f, 0.0f);
             else

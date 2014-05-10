@@ -24,6 +24,8 @@ namespace TeamGame.Puzzles
         HashSet<int> nPosition; // where amountToFind in columns*rows the sixes or nines are hiding
         bool previouslyClicked = false;
 
+        SoundEffectInstance prompt;
+
         /// <summary>
         /// Individual puzzle. Find all sixes or nines from a grid.
         /// </summary>
@@ -44,7 +46,10 @@ namespace TeamGame.Puzzles
             nineTexture = Game.Content.Load<Texture2D>("art/nine");
 
             if (player == Game1.localPlayer)
-                Game.Content.Load<SoundEffect>(findSixes?"audio/FindAllSixes":"audio/FindAllNines").Play(1.0f, 0.0f, 0.0f);
+            {
+                prompt = Game.Content.Load<SoundEffect>(findSixes ? "audio/FindAllSixes" : "audio/FindAllNines").CreateInstance();
+                prompt.Play();
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -97,6 +102,8 @@ namespace TeamGame.Puzzles
 
         public new void PuzzleOver(bool p)
         {
+            if (prompt.State == SoundState.Playing)
+                prompt.Dispose();
             if (p)
                 Game.Content.Load<SoundEffect>("audio/Correct").Play(1.0f, 0.0f, 0.0f);
             else
