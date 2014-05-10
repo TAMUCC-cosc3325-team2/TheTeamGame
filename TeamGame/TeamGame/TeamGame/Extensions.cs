@@ -74,8 +74,8 @@ namespace TeamGame
         /// <returns>True if they intersect</returns>
         public static Boolean Intersects(this Rectangle value, int x, int y, int r)
         {
-            double dx = value.X - MathHelper.Clamp(x, value.Left, value.Right);
-            double dy = value.Y - MathHelper.Clamp(y, value.Top, value.Bottom);
+            double dx = x - MathHelper.Clamp(x, value.Left, value.Right);
+            double dy = y - MathHelper.Clamp(y, value.Top, value.Bottom);
             return dx * dx + dy * dy < r * r;
         }
     }
