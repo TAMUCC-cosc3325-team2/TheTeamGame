@@ -131,13 +131,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="art\correctChevronRight.png">
-      <Name>correctChevronRight</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="art\correctPlus.png">
-      <Name>correctPlus</Name>
     <Compile Include="audio\DragTheCircles.wav">
       <Name>DragTheCircles</Name>
       <Importer>WavImporter</Importer>
@@ -147,6 +140,20 @@
   <ItemGroup>
     <Compile Include="art\avoidBlock.png">
       <Name>avoidBlock</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="art\correctPlus.png">
+      <Name>correctPlus</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="art\correctChevronRight.png">
+      <Name>correctChevronRight</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
