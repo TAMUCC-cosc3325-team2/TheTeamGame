@@ -112,7 +112,7 @@ namespace TeamGame.Puzzles
             Game.Components.Remove(this);
 
 
-            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
+            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player, p);
         }
 
         public override void Encode(NetOutgoingMessage msg)

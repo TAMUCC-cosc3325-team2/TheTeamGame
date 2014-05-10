@@ -17,7 +17,7 @@ namespace TeamGame
     /// Interface for an individual puzzle controlled and updated by a PlayerState.
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class IPuzzle : Microsoft.Xna.Framework.DrawableGameComponent
+    public class IPuzzle : DrawableGameComponent
     {
         public Rectangle drawRegion;
         public Player player;
@@ -47,7 +47,7 @@ namespace TeamGame
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
-            spriteBatch.Draw(statusBarTexture, new Vector2(53, 163), new Rectangle(12 * (Game1.pStates[player].status - 10), 0, 144, 12), player.ColorOf());
+            spriteBatch.Draw(statusBarTexture, new Vector2(53, 163), new Rectangle(12 * (int) (12 - Game1.pStates[player].status), 0, 144, 12), player.ColorOf());
             spriteBatch.End();
         }
 

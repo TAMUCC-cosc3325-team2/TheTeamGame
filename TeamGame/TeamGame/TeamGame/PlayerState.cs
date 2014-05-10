@@ -21,7 +21,7 @@ namespace TeamGame
         public Texture2D cursorTexture;
         public IPuzzle puzzle;
         public Player player;
-        public byte status;
+        public double status;
 
         public PlayerState(Game game, Player player)
             : base(game)
@@ -53,7 +53,12 @@ namespace TeamGame
         public override void Update(GameTime gameTime)
         {
             if (player == Game1.localPlayer)
+            {
+                if (puzzle != null)
+                    puzzle.Visible = true;
                 cursorPosition = Mouse.GetState().Position(); // TODO: Mouse.SetPosition to centre of screen
+                this.status -= Game1.gameDifficulty;
+            }
 
             base.Update(gameTime);
         }
@@ -93,6 +98,7 @@ namespace TeamGame
                 if (puzzle != null)
                     Game.Components.Remove(puzzle);
                 puzzle = remotePuzzleType.CreateFromID(Game, player);
+                puzzle.Visible = true;
             }
 
                 

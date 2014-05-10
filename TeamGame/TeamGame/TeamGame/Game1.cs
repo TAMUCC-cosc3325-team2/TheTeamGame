@@ -21,6 +21,7 @@ namespace TeamGame
         public static Random random = new Random();
         public static Player localPlayer = Player.None;
         public static Dictionary<Player, PlayerState> pStates;
+        public static double gameDifficulty = 0.004;
         
         public static SpriteFont font;
         string windowTitle;

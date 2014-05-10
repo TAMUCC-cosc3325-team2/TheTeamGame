@@ -49,20 +49,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="art\avoidBlockLarge.png">
-      <Name>avoidBlockLarge</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="art\avoidBlockSmall.png">
-      <Name>avoidBlockSmall</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="art\dragableBall.png">
       <Name>dragableBall</Name>
       <Importer>TextureImporter</Importer>
@@ -140,6 +126,30 @@
   <ItemGroup>
     <Compile Include="art\statusBar.png">
       <Name>statusBar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+<<<<<<< HEAD
+    <Compile Include="art\correctChevronRight.png">
+      <Name>correctChevronRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="art\correctPlus.png">
+      <Name>correctPlus</Name>
+=======
+    <Compile Include="audio\DragTheCircles.wav">
+      <Name>DragTheCircles</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="art\avoidBlock.png">
+      <Name>avoidBlock</Name>
+>>>>>>> b77b394468147998ad56e5f2f0c47a075d42b33f
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

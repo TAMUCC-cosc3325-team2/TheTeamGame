@@ -91,5 +91,24 @@ namespace TeamGame
                                  rh);
 
         }
+
+        public static Player ClockwisePlayer(this Player p)
+        {
+            return (Player) Enum.Parse(typeof(Player), "t" + p.TeamOf() + "p" + ((((int) Enum.GetName(typeof(Player), p)[3]) % 4) + 1));
+        }
+        public static float ClockwiseAngle(this Player p)
+        {
+            switch (Enum.GetName(typeof(Player), p)[3])
+            {
+                case '1':
+                    return 0;
+                case '2':
+                    return (float) (Math.PI * 0.5);
+                case '3':
+                    return (float) (Math.PI);
+                default:
+                    return (float) (Math.PI * 1.5);
+            }
+        }
     }
 }

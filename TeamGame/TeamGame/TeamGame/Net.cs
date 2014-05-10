@@ -19,6 +19,7 @@ namespace TeamGame
     public class Net : Microsoft.Xna.Framework.GameComponent
     {
         public NetClient client;
+        TimeSpan clock;
         
 
         public Net(Game game)
@@ -39,7 +40,7 @@ namespace TeamGame
 
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
-                    Game1.pStates[p].puzzle = new Puzzles.Transition(Game, p);
+                    Game1.pStates[p].puzzle = new Puzzles.Transition(Game, p, false);
             //pStates[Player.t1p1].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p1);
             //pStates[Player.t1p2].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p2);
             //pStates[Player.t1p3].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p3);
@@ -65,8 +66,12 @@ namespace TeamGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            if (client.ConnectionStatus == NetConnectionStatus.Connected)
+            clock += gameTime.ElapsedGameTime;
+            if (client.ConnectionStatus == NetConnectionStatus.Connected && (clock.TotalMilliseconds > 100))
+            {
                 SendState();
+                clock.Subtract(clock);
+            }
 
             base.Update(gameTime);
         }
@@ -83,7 +88,8 @@ namespace TeamGame
                         break;
 
                     case NetIncomingMessageType.Data:
-                        ParseData(msg);
+                        try { ParseData(msg); }
+                        catch (Exception) { }
                         break;
                 }
             }
@@ -104,6 +110,8 @@ namespace TeamGame
                     System.Windows.Forms.Form winForm = ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Game.Window.Handle));
                     winForm.Cursor = myCursor;
                 }
+                else if (msg.SequenceChannel == 31) // notified of status increase
+                    Game1.pStates[(Player) msg.ReadByte()].status = 12;
             }
             else
                 Game1.pStates[fromPlayer].Decode(msg);
@@ -114,6 +122,13 @@ namespace TeamGame
             NetOutgoingMessage msg = client.CreateMessage(16);
             Game1.pStates[Game1.localPlayer].Encode(msg);
             client.SendMessage(msg, NetDeliveryMethod.UnreliableSequenced, (int) Game1.localPlayer);
+        }
+        public void NotifyStatusIncrease()
+        {
+            NetOutgoingMessage msg = client.CreateMessage();
+            msg.Write((byte)212);
+            msg.Write((byte)Game1.localPlayer.ClockwisePlayer());
+            client.SendMessage(msg, NetDeliveryMethod.ReliableOrdered, 31);
         }
     }
 }
