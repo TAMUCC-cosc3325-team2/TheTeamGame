@@ -5,12 +5,13 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame.Puzzles
 {
     class Transition : IPuzzle
     {
-        int countUpdates = 90;
+        int countUpdates = 180;
         bool puzzleSuccess;
         Texture2D plusTexture, chevronTexture;
         Vector2 displacement, chevronPosition;
@@ -23,6 +24,7 @@ namespace TeamGame.Puzzles
 
             if (puzzleSuccess)
                 ((Net)Game.Services.GetService(typeof(Net))).NotifyStatusIncrease();
+                
         }
         public Transition(Game game, Player player)
             : base(game, player)
@@ -50,34 +52,40 @@ namespace TeamGame.Puzzles
             spriteBatch.Draw(plusTexture, new Vector2(), player.ColorOf());
             spriteBatch.End();
 
-
-            Rectangle temp = spriteBatch.GraphicsDevice.ScissorRectangle;
-            spriteBatch.GraphicsDevice.ScissorRectangle = this.drawRegion;
-            spriteBatch.Begin();
+            
+            Game.GraphicsDevice.ScissorRectangle = this.drawRegion;
+            
+            RasterizerState rs = new RasterizerState();
+            rs.ScissorTestEnable = true;
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, rs);
             spriteBatch.Draw(chevronTexture, chevronPosition + displacement, null, player.ColorOf(), player.ClockwiseAngle(), new Vector2(42,35), 1.0f, SpriteEffects.None, 0);
             spriteBatch.End();
-            spriteBatch.GraphicsDevice.ScissorRectangle = temp;
             
         }
 
         public override void Update(GameTime gameTime)
         {
+            displacement *= 1.05f;
+
             if (player != Game1.localPlayer)
                 return;
 
-            displacement *= 1.05f;
-
             countUpdates -= 1;
-
-            if (countUpdates == 0)
-                PuzzleOver(true);
+            if (countUpdates == 130)
+            {
+                Game.Content.Load<SoundEffect>("audio/" + player.ClockwisePlayer().ColorName()).Play();
+                Game.Content.Load<SoundEffect>("audio/Status" + (puzzleSuccess ? "In" : "De") + "creased").Play();
+            }
+                if (countUpdates == 0)
+                    PuzzleOver(true);
+            
 
         }
 
         public new void PuzzleOver(bool p)
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte) (Game1.random.Next(1, 3));
+            byte randomPuzzle = (byte)(Game1.random.Next(2, 5));
             Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
         }
 
