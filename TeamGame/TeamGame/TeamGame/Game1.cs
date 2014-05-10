@@ -17,10 +17,10 @@ namespace TeamGame
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
         Net net;
         public static Random random = new Random();
         public static Player localPlayer = Player.None;
+        public static SpriteFont font;
         string windowTitle;
 
         public Game1()
@@ -51,10 +51,7 @@ namespace TeamGame
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            
+            font = Content.Load<SpriteFont>("ArmyHollow");
         }
 
         /// <summary>

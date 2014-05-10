@@ -88,6 +88,7 @@
     <Compile Include="Puzzles\DragCircleAvoidBlocks.cs" />
     <Compile Include="Puzzles\IPuzzle.cs" />
     <Compile Include="Puzzles\NumeralSearch.cs" />
+    <Compile Include="Puzzles\TextNamesColorOfCircle.cs" />
     <Compile Include="Puzzles\Transition.cs" />
   </ItemGroup>
   <ItemGroup>

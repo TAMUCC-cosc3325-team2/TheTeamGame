@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame.Puzzles
 {
@@ -21,6 +22,7 @@ namespace TeamGame.Puzzles
 
         bool findSixes; // false -> player tries to find 9's
         HashSet<int> nPosition; // where amountToFind in columns*rows the sixes or nines are hiding
+        bool previouslyClicked = false;
 
         /// <summary>
         /// Individual puzzle. Find all sixes or nines from a grid.
@@ -41,7 +43,8 @@ namespace TeamGame.Puzzles
             sixTexture = Game.Content.Load<Texture2D>("art/six");
             nineTexture = Game.Content.Load<Texture2D>("art/nine");
 
-            base.Initialize();
+            if (player == Game1.localPlayer)
+                Game.Content.Load<SoundEffect>(findSixes?"audio/FindAllSixes":"audio/FindAllNines").Play(1.0f, 0.0f, 0.0f);
         }
 
         public override void Draw(GameTime gameTime)
@@ -68,6 +71,10 @@ namespace TeamGame.Puzzles
 
             if (Mouse.GetState().LeftButton.IsClicked())
             {
+                if (previouslyClicked)
+                    return;
+                previouslyClicked = true;
+
                 Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2() + offset);
 
                 if (new Rectangle(0, 0, columns * width, rows * height).Contains(relativePos))
@@ -78,22 +85,27 @@ namespace TeamGame.Puzzles
                         {
                             nPosition.Remove(i);
                             return;
-                        }   
-                    } 
+                        }
+                    }
                     // else they clicked the wrong number
                     PuzzleOver(false);
                 }
             }
+            else
+                previouslyClicked = false;
         }
 
         public new void PuzzleOver(bool p)
         {
             if (p)
-            {
-                Game.Components.Remove(this);
-                ((Net)Game.Services.GetService(typeof(Net))).pStates[this.player].puzzle = new Puzzles.NumeralSearch(Game, player);
-            }
-            
+                Game.Content.Load<SoundEffect>("audio/Correct").Play(1.0f, 0.0f, 0.0f);
+            else
+                Game.Content.Load<SoundEffect>("audio/Incorrect").Play(1.0f, 0.0f, 0.0f);
+
+            Game.Components.Remove(this);
+
+
+            ((Net)Game.Services.GetService(typeof(Net))).pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
         }
 
         public override void Encode(NetOutgoingMessage msg)

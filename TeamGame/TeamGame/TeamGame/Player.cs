@@ -19,10 +19,13 @@ namespace TeamGame
             return Enum.GetName(typeof(Player), p)[1] - 48;
         }
 
-        public static Color ColorOf(this Player p)
+        /// <summary>
+        /// Returns the color the player appears to himself as.
+        /// </summary>
+        /// <param name="p">Any player</param>
+        /// <returns>One of RGBY</returns>
+        public static Color RealColor(this Player p)
         {
-            if (p.TeamOf() != Game1.localPlayer.TeamOf())
-                return Color.Beige;
             switch (Enum.GetName(typeof(Player), p)[3])
             {
                 case '1':
@@ -34,8 +37,19 @@ namespace TeamGame
                 case '4':
                     return Color.Yellow;
                 default:
-                    return Color.Teal;
+                    return Color.Orange;
             }
+        }
+        /// <summary>
+        /// Returns the color of the player considering which team he's on
+        /// </summary>
+        /// <param name="p">Any player</param>
+        /// <returns>RGBY or Non-team color</returns>
+        public static Color ColorOf(this Player p)
+        {
+            if (p.TeamOf() != Game1.localPlayer.TeamOf())
+                return Color.Beige;
+            return p.RealColor();
             
         }
         public static string ColorName(this Player p)

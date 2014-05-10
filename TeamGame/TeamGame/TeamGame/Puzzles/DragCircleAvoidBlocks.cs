@@ -73,11 +73,26 @@ namespace TeamGame.Puzzles
 
         public override void Encode(NetOutgoingMessage msg)
         {
-
+            msg.Write((short)ball1Pos.X);
+            msg.Write((short)ball1Pos.Y);
+            //msg.Write((short)ball2Pos.X); // can be computed from the ball1Pos
+            //msg.Write((short)ball2Pos.Y);
+            msg.Write((short)block1Pos.X);
+            msg.Write((short)block1Pos.Y);
+            msg.Write((short)block2Pos.X);
+            msg.Write((short)block2Pos.Y);
         }
 
         public override void Decode(NetIncomingMessage msg)
         {
+            ball1Pos.X = msg.ReadInt16();
+            ball1Pos.Y = msg.ReadInt16();
+            //ball2Pos.X = msg.ReadInt16();
+            //ball2Pos.Y = msg.ReadInt16();
+            block1Pos.X = msg.ReadInt16();
+            block1Pos.Y = msg.ReadInt16();
+            block1Pos.X = msg.ReadInt16();
+            block1Pos.Y = msg.ReadInt16();
 
         }
     }

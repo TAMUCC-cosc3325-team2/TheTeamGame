@@ -51,7 +51,8 @@ namespace TeamGame
         public static Dictionary<Type, byte> map = new Dictionary<Type, byte>(){
             { typeof(Puzzles.Transition), 1},
             { typeof(Puzzles.NumeralSearch), 2},
-            { typeof(Puzzles.DragCircleAvoidBlocks), 3}
+            { typeof(Puzzles.DragCircleAvoidBlocks), 3},
+            { typeof(Puzzles.TextNamesColorOfCircle), 4}
             };
 
         /// <summary>
