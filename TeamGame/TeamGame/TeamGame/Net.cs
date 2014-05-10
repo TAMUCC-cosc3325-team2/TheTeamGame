@@ -67,7 +67,7 @@ namespace TeamGame
         public override void Update(GameTime gameTime)
         {
             clock += gameTime.ElapsedGameTime;
-            if (client.ConnectionStatus == NetConnectionStatus.Connected && (clock.TotalMilliseconds > 100))
+            if (client.ConnectionStatus == NetConnectionStatus.Connected && (clock.TotalMilliseconds > 10))
             {
                 SendState();
                 clock.Subtract(clock);
@@ -126,7 +126,6 @@ namespace TeamGame
         public void NotifyStatusIncrease()
         {
             NetOutgoingMessage msg = client.CreateMessage();
-            msg.Write((byte)212);
             msg.Write((byte)Game1.localPlayer.ClockwisePlayer());
             client.SendMessage(msg, NetDeliveryMethod.ReliableOrdered, 31);
         }

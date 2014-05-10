@@ -91,6 +91,8 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
+            base.Draw(gameTime);
+
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             spriteBatch.Draw(background, backgroundRec, player.ColorOf());
