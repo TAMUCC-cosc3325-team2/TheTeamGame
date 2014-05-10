@@ -5,12 +5,13 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame.Puzzles
 {
     class Transition : IPuzzle
     {
-        int countUpdates = 90;
+        int countUpdates = 180;
         bool puzzleSuccess;
         Texture2D plusTexture, chevronTexture;
         Vector2 displacement, chevronPosition;
@@ -23,6 +24,7 @@ namespace TeamGame.Puzzles
 
             if (puzzleSuccess)
                 ((Net)Game.Services.GetService(typeof(Net))).NotifyStatusIncrease();
+                
         }
         public Transition(Game game, Player player)
             : base(game, player)
@@ -69,9 +71,14 @@ namespace TeamGame.Puzzles
                 return;
 
             countUpdates -= 1;
-
-            if (countUpdates == 0)
-                PuzzleOver(true);
+            if (countUpdates == 130)
+            {
+                Game.Content.Load<SoundEffect>("audio/" + player.ClockwisePlayer().ColorName()).Play();
+                Game.Content.Load<SoundEffect>("audio/Status" + (puzzleSuccess ? "In" : "De") + "creased").Play();
+            }
+                if (countUpdates == 0)
+                    PuzzleOver(true);
+            
 
         }
 
