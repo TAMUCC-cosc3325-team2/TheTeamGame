@@ -98,9 +98,6 @@ namespace TeamGame
 
     public class Triangle
     {
-        Rectangle location;
-        int degrees;
-
         public Status Stat
         {
             get;

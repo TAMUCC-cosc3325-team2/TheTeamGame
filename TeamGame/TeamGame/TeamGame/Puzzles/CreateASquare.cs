@@ -31,6 +31,8 @@ namespace TeamGame.Puzzles
     {
         SoundEffectInstance prompt;
         Texture2D triangle;
+        Texture2D ball;
+        SpriteFont font;
 
         Triangle tri1, tri2, tri3, tri4;
 
@@ -58,10 +60,10 @@ namespace TeamGame.Puzzles
             tri3 = new Triangle();
             tri4 = new Triangle();
 
-            tri1.Location = new Rectangle(83, 33, 83, 42);
-            tri2.Location = new Rectangle(83, 116, 83, 42);
-            tri3.Location = new Rectangle(116, 33, 83, 42);
-            tri4.Location = new Rectangle(116, 116, 83, 42);
+            tri1.Location = new Rectangle(120, 27, 83, 42);
+            tri2.Location = new Rectangle(78, 69, 83, 42);
+            tri3.Location = new Rectangle(162, 69, 83, 42);
+            tri4.Location = new Rectangle(120, 111, 83, 42);
 
             //Are you proud of me yet?
             tri1.Rot = (randNum = Game1.random.Next(0,2)) == 0 ? Orientation.Up : randNum == 1 ? Orientation.Left : Orientation.Right;
@@ -84,10 +86,12 @@ namespace TeamGame.Puzzles
         {
             
             triangle = Game.Content.Load<Texture2D>("art/triangle");
+            ball = Game.Content.Load<Texture2D>("art/dragableBall");
+            font = Game.Content.Load<SpriteFont>("ArmyHollow");
             if (player == Game1.localPlayer)
             {
-                //prompt = Game.Content.Load<SoundEffect>("audio/CreateASquare").CreateInstance();
-                //prompt.Play();
+                prompt = Game.Content.Load<SoundEffect>("audio/CreateASquare").CreateInstance();
+                prompt.Play();
             }
         }
 
@@ -97,9 +101,14 @@ namespace TeamGame.Puzzles
 
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
+            spriteBatch.DrawString(font, "tri1Rot: " + tri1.Rot.ToString(), new Vector2(0, 0) + mouse.Position(), Color.White);
+            spriteBatch.DrawString(font, "tri2Rot: " + tri2.Rot.ToString(), new Vector2(0, 15) + mouse.Position(), Color.White);
+            spriteBatch.DrawString(font, "tri3Rot: " + tri3.Rot.ToString(), new Vector2(0, 30) + mouse.Position(), Color.White);
+            spriteBatch.DrawString(font, "tri4Rot: " + tri4.Rot.ToString(), new Vector2(0, 45) + mouse.Position(), Color.White);
+
             foreach (Triangle tri in Triangles)
                 spriteBatch.Draw(triangle, tri.Location.Location.ToVector2(), null, player.ColorOf(), MathHelper.ToRadians(tri.Degrees),
-                new Vector2(tri.Location.Center.X, tri.Location.Center.Y), 1.0f, SpriteEffects.None, 0f);
+                new Vector2(tri.Location.Width/2, tri.Location.Height), 1.0f, SpriteEffects.None, 0f);
             spriteBatch.End();
         }
 
@@ -107,14 +116,16 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-            bool gameOver = false;
             countUpdates++;
 
             mouse = Mouse.GetState();
 
+            Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2());
+
             foreach (Triangle tri in Triangles)
             {
-                if(MouseWithinRotatedRectangle(tri, mouse.Position(), MathHelper.ToRadians(tri.Degrees)))
+                double radius = Math.Sqrt(Math.Pow(tri.Location.Width/2, 2) + Math.Pow(tri.Location.Height/2, 2));
+                if((relativePos - tri.Location.Location.ToVector2()).Length() <= radius)
                 {
                     if(prevMouse.LeftButton == ButtonState.Released && mouse.LeftButton == ButtonState.Pressed && tri.Stat == Status.Waiting)
                     {
@@ -129,43 +140,43 @@ namespace TeamGame.Puzzles
                 {
                     switch (tri.Rot)
                     {
-                        case Orientation.Up:
+                        case Orientation.Right:
                             tri.Degrees = 90;
                             break;
-                        case Orientation.Left:
+                        case Orientation.Down:
                             tri.Degrees = 180;
                             break;
-                        case Orientation.Right:
+                        case Orientation.Up:
                             tri.Degrees = 0;
                             break;
-                        case Orientation.Down:
+                        case Orientation.Left:
                             tri.Degrees = 270;
                             break;
                     }
                 }
                 else if (tri.Stat == Status.Rotating)
                 {
-                    tri.Degrees++;
+                    tri.Degrees = tri.Degrees + 5;
                     if (tri.Degrees % 90 == 0)
                     {
                         tri.Stat = Status.Waiting;
                         switch (tri.Degrees)
                         {
                             case 0:
-                                tri.Rot = Orientation.Right;
-                                break;
-                            case 90:
                                 tri.Rot = Orientation.Up;
                                 break;
+                            case 90:
+                                tri.Rot = Orientation.Right;
+                                break;
                             case 180:
-                                tri.Rot = Orientation.Left;
+                                tri.Rot = Orientation.Down;
                                 break;
                             case 270:
-                                tri.Rot = Orientation.Down;
+                                tri.Rot = Orientation.Left;
                                 break;
                             case 360:
                                 tri.Degrees = 0;
-                                tri.Rot = Orientation.Right;
+                                tri.Rot = Orientation.Up;
                                 break;
                         }
                     }
@@ -173,16 +184,18 @@ namespace TeamGame.Puzzles
             }
             if (tri1.Rot == Orientation.Down && tri2.Rot == Orientation.Right && tri3.Rot == Orientation.Left && tri4.Rot == Orientation.Up)
                 PuzzleOver(true);
-            if (countUpdates > 420)
-                PuzzleOver(false);
+            
+            //Uncomment for timeout.
+            //if (countUpdates > 520)
+            //    PuzzleOver(false);
 
             prevMouse = mouse;
         }
 
         public new void PuzzleOver(bool p)
         {
-            //if (prompt.State == SoundState.Playing)
-            //    prompt.Dispose();
+            if (prompt.State == SoundState.Playing)
+                prompt.Dispose();
             if (p)
                 Game.Content.Load<SoundEffect>("audio/Correct").Play(1.0f, 0.0f, 0.0f);
             else
@@ -220,15 +233,6 @@ namespace TeamGame.Puzzles
             tri3.Degrees = msg.ReadInt16();
             tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
             tri4.Degrees = msg.ReadInt16();
-        }
-
-        bool MouseWithinRotatedRectangle(Triangle tri, Vector2 tmp_mousePosition, float angleRotation)
-        {
-            Vector2 mousePosition = tmp_mousePosition - tri.Location.Location.ToVector2();
-            float mouseOriginalAngle = (float)Math.Atan(mousePosition.Y / mousePosition.X);
-            mousePosition = new Vector2((float)(Math.Cos(-angleRotation + mouseOriginalAngle) * mousePosition.Length()), 
-                                        (float)(Math.Sin(-angleRotation + mouseOriginalAngle) * mousePosition.Length()));
-            return tri.Location.Contains(mousePosition);
         }
     }
 }
