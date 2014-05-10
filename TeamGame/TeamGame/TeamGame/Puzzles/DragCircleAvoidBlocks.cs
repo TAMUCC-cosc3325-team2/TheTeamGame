@@ -62,12 +62,12 @@ namespace TeamGame.Puzzles
         public DragCircleAvoidBlocks(Game game, Player player)
             : base(game, player)
         {
-            backgroundRec = new Rectangle(0, 0, 250, 175);
-            goalRec = new Rectangle(86, 145, 30, 30);
-            ball1Rec = new Rectangle(4, 0, 30, 30);
-            ball2Rec = new Rectangle(216, 145, 30, 30);
-            block1Rec = new Rectangle(200, 50, 50, 30);
-            block2Rec = new Rectangle(180, 100, 70, 30);
+            backgroundRec = new Rectangle(0, 0, 250, 150);
+            goalRec = new Rectangle(90, 128, 22, 22);
+            ball1Rec = new Rectangle(4, 0, 22, 22);
+            ball2Rec = new Rectangle(223, 128, 18, 18);
+            block1Rec = new Rectangle(180, 45, 70, 17);
+            block2Rec = new Rectangle(200, 83, 50, 17);
             block1State = block2State = BlockState.Waiting;
             ball1State = ball2State = ClickedState.Released;
         }
@@ -77,8 +77,8 @@ namespace TeamGame.Puzzles
 
             background = Game.Content.Load<Texture2D>("art/dragCircleTest");
             ball = Game.Content.Load<Texture2D>("art/dragableBall");
-            block1 = Game.Content.Load<Texture2D>("art/avoidBlockSmall");
-            block2 = Game.Content.Load<Texture2D>("art/avoidBlockSmall");
+            block1 = Game.Content.Load<Texture2D>("art/avoidBlock");
+            block2 = Game.Content.Load<Texture2D>("art/avoidBlock");
 
             if (player == Game1.localPlayer)
             {
@@ -177,19 +177,19 @@ namespace TeamGame.Puzzles
 
             if (ball1State == ClickedState.Clicked)
             {
-                ball1Rec.Location = new Point((int)relativePos.X - 15, (int)relativePos.Y - 15);
+                ball1Rec.Location = new Point((int)relativePos.X - 9, (int)relativePos.Y - 9);
 
                 if (ball1Rec.Bottom >= backgroundRec.Bottom)
-                    ball1Rec.Y = backgroundRec.Bottom - 30;
+                    ball1Rec.Y = backgroundRec.Bottom - 18;
                 else if (ball1Rec.Top <= backgroundRec.Top)
                     ball1Rec.Y = backgroundRec.Top;
                 if (ball1Rec.Right >= backgroundRec.Right)
-                    ball1Rec.X = backgroundRec.Right - 30;
+                    ball1Rec.X = backgroundRec.Right - 18;
                 else if (ball1Rec.Left <= backgroundRec.Left)
                     ball1Rec.X = backgroundRec.Left;
 
-                ball2Rec.X = backgroundRec.Right - 30 - ball1Rec.X;
-                ball2Rec.Y = backgroundRec.Bottom - 30 - ball1Rec.Y;
+                ball2Rec.X = backgroundRec.Right - 18 - ball1Rec.X;
+                ball2Rec.Y = backgroundRec.Bottom - 18 - ball1Rec.Y;
 
                 if (mouse.LeftButton == ButtonState.Released)
                     ball1State = ClickedState.Released;
@@ -197,19 +197,19 @@ namespace TeamGame.Puzzles
 
             else if (ball2State == ClickedState.Clicked)
             {
-                ball2Rec.Location = new Point((int)relativePos.X - 15, (int)relativePos.Y - 15);
+                ball2Rec.Location = new Point((int)relativePos.X - 9, (int)relativePos.Y - 9);
 
                 if (ball2Rec.Bottom >= backgroundRec.Bottom)
-                    ball2Rec.Y = backgroundRec.Bottom - 30;
+                    ball2Rec.Y = backgroundRec.Bottom - 18;
                 else if (ball2Rec.Top <= backgroundRec.Top)
                     ball2Rec.Y = backgroundRec.Top;
                 if (ball2Rec.Right >= backgroundRec.Right)
-                    ball2Rec.X = backgroundRec.Right - 30;
+                    ball2Rec.X = backgroundRec.Right - 18;
                 else if (ball2Rec.Left <= backgroundRec.Left)
                     ball2Rec.X = backgroundRec.Left;
 
-                ball1Rec.X = backgroundRec.Right - 30 - ball2Rec.X;
-                ball1Rec.Y = backgroundRec.Bottom - 30 - ball2Rec.Y;
+                ball1Rec.X = backgroundRec.Right - 18 - ball2Rec.X;
+                ball1Rec.Y = backgroundRec.Bottom - 18 - ball2Rec.Y;
 
                 if (mouse.LeftButton == ButtonState.Released)
                     ball2State = ClickedState.Released;
