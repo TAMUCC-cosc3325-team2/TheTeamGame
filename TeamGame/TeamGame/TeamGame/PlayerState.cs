@@ -57,7 +57,10 @@ namespace TeamGame
                 if (puzzle != null)
                     puzzle.Visible = true;
                 cursorPosition = Mouse.GetState().Position(); // TODO: Mouse.SetPosition to centre of screen
-                this.status -= Game1.gameDifficulty;
+                if (this.status > 0)
+                    this.status -= Game1.gameDifficulty;
+                else
+                    this.status = 0;
             }
 
             base.Update(gameTime);

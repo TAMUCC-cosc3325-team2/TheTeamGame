@@ -37,7 +37,7 @@ namespace TeamGame
         {
             return r.Contains((int) v.X, (int) v.Y);
         }
-        /// Thanks Hans Passant!
+        /// Hans Passant
         /// http://stackoverflow.com/questions/4305800/using-custom-colored-cursors-in-a-c-windows-application
         public static Cursor LoadCustomCursor(string path)
         {
@@ -74,8 +74,8 @@ namespace TeamGame
         /// <returns>True if they intersect</returns>
         public static Boolean Intersects(this Rectangle value, int x, int y, int r)
         {
-            double dx = value.X - MathHelper.Clamp(x, value.Left, value.Right);
-            double dy = value.Y - MathHelper.Clamp(y, value.Top, value.Bottom);
+            double dx = x - MathHelper.Clamp(x, value.Left, value.Right);
+            double dy = y - MathHelper.Clamp(y, value.Top, value.Bottom);
             return dx * dx + dy * dy < r * r;
         }
     }
