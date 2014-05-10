@@ -108,6 +108,8 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
+            base.Draw(gameTime);
+
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             spriteBatch.Draw(background, backgroundRec, player.ColorOf());
@@ -191,6 +193,11 @@ namespace TeamGame.Puzzles
                 ball1State = ClickedState.Clicked;
             else if (mouse.LeftButton == ButtonState.Pressed && ball2Rec.Contains(relativePos))
                 ball2State = ClickedState.Clicked;
+            else
+            {
+                ball1Rec = new Rectangle(4, 0, 22, 22);
+                ball2Rec = new Rectangle(223, 128, 22, 22);
+            }
 
             if (ball1State == ClickedState.Clicked)
             {

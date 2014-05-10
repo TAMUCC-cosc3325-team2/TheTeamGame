@@ -45,7 +45,11 @@ namespace TeamGame.Puzzles
             {
                 ballColor = (MyColor)((Game1.random.Next(1, 4) + (int)ballColor) % 4);
                 textColor = (MyColor)((Game1.random.Next(1, 4) + (int)textColor) % 4);
+                if (textColor == ballColor)
+                    textColor = (MyColor)(((int) textColor + 1) % 4);
                 textWord = (MyColor)((Game1.random.Next(1, 4) + (int)textWord) % 4);
+                if (textWord == textColor)
+                    textWord = ballColor;
                 timesDisplayed = 0;
                 return;
             }

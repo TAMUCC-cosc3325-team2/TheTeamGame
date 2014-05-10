@@ -11,6 +11,8 @@ namespace TeamGame.Puzzles
 {
     class Transition : IPuzzle
     {
+        public bool starting = false;
+
         int countUpdates = 180;
         bool puzzleSuccess;
         Texture2D plusTexture, chevronTexture;
@@ -47,10 +49,14 @@ namespace TeamGame.Puzzles
 
             if (!puzzleSuccess)
                 return;
+
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
-            spriteBatch.Draw(plusTexture, new Vector2(), player.ColorOf());
-            spriteBatch.End();
+            if (this.countUpdates > 60)
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
+                spriteBatch.Draw(plusTexture, new Vector2(), player.ColorOf());
+                spriteBatch.End();
+            }
 
             
             Game.GraphicsDevice.ScissorRectangle = this.drawRegion;
@@ -71,7 +77,7 @@ namespace TeamGame.Puzzles
                 return;
 
             countUpdates -= 1;
-            if (countUpdates == 130)
+            if (countUpdates == 130 && !this.starting)
             {
                 Game.Content.Load<SoundEffect>("audio/" + player.ClockwisePlayer().ColorName()).Play();
                 Game.Content.Load<SoundEffect>("audio/Status" + (puzzleSuccess ? "In" : "De") + "creased").Play();
