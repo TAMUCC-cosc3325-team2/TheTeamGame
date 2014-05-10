@@ -217,7 +217,7 @@ namespace TeamGame.Puzzles
                     ball2State = ClickedState.Released;
             }
 
-            if (block1Rec.Intersects(ball1Rec) || block1Rec.Intersects(ball2Rec))
+            if (block1Rec.Intersects(ball1Rec.Center.X, ball1Rec.Center.Y, ball1Rec.Height/2) || block1Rec.Intersects(ball2Rec))
                 PuzzleOver(false);
             else if (block2Rec.Intersects(ball1Rec) || block2Rec.Intersects(ball2Rec))
                 PuzzleOver(false);

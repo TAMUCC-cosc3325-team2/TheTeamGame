@@ -37,7 +37,7 @@ namespace TeamGame
         {
             return r.Contains((int) v.X, (int) v.Y);
         }
-        /// Thanks Hans Passant!
+        /// Hans Passant
         /// http://stackoverflow.com/questions/4305800/using-custom-colored-cursors-in-a-c-windows-application
         public static Cursor LoadCustomCursor(string path)
         {
