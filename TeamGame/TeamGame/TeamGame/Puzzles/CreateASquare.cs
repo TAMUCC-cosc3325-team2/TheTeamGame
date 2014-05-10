@@ -58,10 +58,10 @@ namespace TeamGame.Puzzles
             tri3 = new Triangle();
             tri4 = new Triangle();
 
-            tri1.Location = new Rectangle(50, 0, 150, 75);
-            tri2.Location = new Rectangle(50, 75, 150, 75);
-            tri3.Location = new Rectangle(0, 75, 150, 75);
-            tri4.Location = new Rectangle(150, 75, 150, 75);
+            tri1.Location = new Rectangle(83, 33, 83, 42);
+            tri2.Location = new Rectangle(83, 116, 83, 42);
+            tri3.Location = new Rectangle(116, 33, 83, 42);
+            tri4.Location = new Rectangle(116, 116, 83, 42);
 
             //Are you proud of me yet?
             tri1.Rot = (randNum = Game1.random.Next(0,2)) == 0 ? Orientation.Up : randNum == 1 ? Orientation.Left : Orientation.Right;
@@ -98,7 +98,8 @@ namespace TeamGame.Puzzles
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             foreach (Triangle tri in Triangles)
-                spriteBatch.Draw(triangle, tri.Location, tri.Location, player.ColorOf(), MathHelper.ToRadians(tri.Degrees), tri.Location.Location.ToVector2(), SpriteEffects.None, 0f);
+                spriteBatch.Draw(triangle, tri.Location.Location.ToVector2(), null, player.ColorOf(), MathHelper.ToRadians(tri.Degrees),
+                new Vector2(tri.Location.Center.X, tri.Location.Center.Y), 1.0f, SpriteEffects.None, 0f);
             spriteBatch.End();
         }
 
@@ -106,13 +107,14 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
+            bool gameOver = false;
             countUpdates++;
 
             mouse = Mouse.GetState();
 
             foreach (Triangle tri in Triangles)
             {
-                if(tri.Location.Contains(mouse.PPosition()))
+                if(MouseWithinRotatedRectangle(tri, mouse.Position(), MathHelper.ToRadians(tri.Degrees)))
                 {
                     if(prevMouse.LeftButton == ButtonState.Released && mouse.LeftButton == ButtonState.Pressed && tri.Stat == Status.Waiting)
                     {
@@ -168,12 +170,11 @@ namespace TeamGame.Puzzles
                         }
                     }
                 }
-                if (tri1.Rot == Orientation.Down && tri2.Rot == Orientation.Right && tri3.Rot == Orientation.Left && tri4.Rot == Orientation.Up)
-                    PuzzleOver(true);
-                else if (countUpdates > 420)
-                    PuzzleOver(false);
-
             }
+            if (tri1.Rot == Orientation.Down && tri2.Rot == Orientation.Right && tri3.Rot == Orientation.Left && tri4.Rot == Orientation.Up)
+                PuzzleOver(true);
+            if (countUpdates > 420)
+                PuzzleOver(false);
 
             prevMouse = mouse;
         }
@@ -211,14 +212,23 @@ namespace TeamGame.Puzzles
 
         public override void Decode(NetIncomingMessage msg)
         {
-            tri1.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 150, 75);
+            tri1.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
             tri1.Degrees = msg.ReadInt16();
-            tri2.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 150, 75);
+            tri2.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
             tri2.Degrees = msg.ReadInt16();
-            tri3.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 150, 75);
+            tri3.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
             tri3.Degrees = msg.ReadInt16();
-            tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 150, 75);
+            tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
             tri4.Degrees = msg.ReadInt16();
+        }
+
+        bool MouseWithinRotatedRectangle(Triangle tri, Vector2 tmp_mousePosition, float angleRotation)
+        {
+            Vector2 mousePosition = tmp_mousePosition - tri.Location.Location.ToVector2();
+            float mouseOriginalAngle = (float)Math.Atan(mousePosition.Y / mousePosition.X);
+            mousePosition = new Vector2((float)(Math.Cos(-angleRotation + mouseOriginalAngle) * mousePosition.Length()), 
+                                        (float)(Math.Sin(-angleRotation + mouseOriginalAngle) * mousePosition.Length()));
+            return tri.Location.Contains(mousePosition);
         }
     }
 }

@@ -299,7 +299,7 @@ namespace TeamGame.Puzzles
                 Game.Content.Load<SoundEffect>("audio/Incorrect").Play(1.0f, 0.0f, 0.0f);
 
             Game.Components.Remove(this);
-            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player);  
+            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player, p);  
         }
 
         public override void Encode(NetOutgoingMessage msg)
