@@ -61,12 +61,14 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
+            base.Draw(gameTime); // draw healthbar
+
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(/*SpriteSortMode.Deferred, null, null, null, null, null, this.matrix*/);
 
             spriteBatch.Draw(ballTexture, ballPosition, ((Player)ballColor+7).RealColor());
             String text = Enum.GetName(typeof(MyColor), textWord);
-            spriteBatch.DrawString(Game1.font, text, ballPosition.Center.ToVector2().Plus(0, 75), ((Player)textColor+7).RealColor(), 0, Game1.font.MeasureString(text)/2, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(Game1.font, text, ballPosition.Center.ToVector2().Plus(0, 50), ((Player)textColor+7).RealColor(), 0, Game1.font.MeasureString(text)/2, 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
 
             timesDisplayed += 1;
@@ -84,7 +86,7 @@ namespace TeamGame.Puzzles
             Game.Components.Remove(this);
 
 
-            ((Net)Game.Services.GetService(typeof(Net))).pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
+            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
         }
 
         public override void Encode(Lidgren.Network.NetOutgoingMessage msg)

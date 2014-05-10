@@ -66,7 +66,7 @@ namespace TeamGame.Puzzles
             if (p)
             {
                 Game.Components.Remove(this);
-                ((Net)Game.Services.GetService(typeof(Net))).pStates[this.player].puzzle = new Puzzles.NumeralSearch(Game, player);
+                Game1.pStates[this.player].puzzle = new Puzzles.NumeralSearch(Game, player);
             }
             
         }

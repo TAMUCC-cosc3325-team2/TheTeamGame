@@ -19,7 +19,7 @@ namespace TeamGame
     public class Net : Microsoft.Xna.Framework.GameComponent
     {
         public NetClient client;
-        public Dictionary<Player, PlayerState> pStates;
+        
 
         public Net(Game game)
             : base(game)
@@ -33,13 +33,13 @@ namespace TeamGame
             client.RegisterReceivedCallback(new System.Threading.SendOrPostCallback(IncomingMessage));
             client.Start();
 
-            pStates = new Dictionary<Player, PlayerState>();
+            Game1.pStates = new Dictionary<Player, PlayerState>();
             foreach (Player p in Enum.GetValues(typeof(Player)))
-                pStates.Add(p, new PlayerState(this.Game, p));
+                Game1.pStates.Add(p, new PlayerState(this.Game, p));
 
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
-                    pStates[p].puzzle = new Puzzles.Transition(Game, p);
+                    Game1.pStates[p].puzzle = new Puzzles.Transition(Game, p);
             //pStates[Player.t1p1].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p1);
             //pStates[Player.t1p2].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p2);
             //pStates[Player.t1p3].puzzle = new Puzzles.NumeralSearch(Game, Player.t1p3);
@@ -106,13 +106,13 @@ namespace TeamGame
                 }
             }
             else
-                pStates[fromPlayer].Decode(msg);
+                Game1.pStates[fromPlayer].Decode(msg);
         }
 
         public void SendState()
         {
             NetOutgoingMessage msg = client.CreateMessage(16);
-            pStates[Game1.localPlayer].Encode(msg);
+            Game1.pStates[Game1.localPlayer].Encode(msg);
             client.SendMessage(msg, NetDeliveryMethod.UnreliableSequenced, (int) Game1.localPlayer);
         }
     }

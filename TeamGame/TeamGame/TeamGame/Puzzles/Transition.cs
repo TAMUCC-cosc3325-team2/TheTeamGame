@@ -43,7 +43,7 @@ namespace TeamGame.Puzzles
         {
             Game.Components.Remove(this);
             byte randomPuzzle = (byte) (Game1.random.Next(1, 3) * 2);
-            ((Net)Game.Services.GetService(typeof(Net))).pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
+            Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
         }
 
         public override void Encode(NetOutgoingMessage msg)

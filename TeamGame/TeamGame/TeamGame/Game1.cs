@@ -20,6 +20,8 @@ namespace TeamGame
         Net net;
         public static Random random = new Random();
         public static Player localPlayer = Player.None;
+        public static Dictionary<Player, PlayerState> pStates;
+        
         public static SpriteFont font;
         string windowTitle;
 
@@ -51,6 +53,7 @@ namespace TeamGame
         /// </summary>
         protected override void LoadContent()
         {
+            
             font = Content.Load<SpriteFont>("ArmyHollow");
         }
 

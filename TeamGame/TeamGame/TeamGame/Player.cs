@@ -31,7 +31,7 @@ namespace TeamGame
                 case '1':
                     return Color.Red;
                 case '2':
-                    return Color.OliveDrab;
+                    return Color.FromNonPremultiplied(25, 255, 10, 255);
                 case '3':
                     return Color.Blue;
                 case '4':

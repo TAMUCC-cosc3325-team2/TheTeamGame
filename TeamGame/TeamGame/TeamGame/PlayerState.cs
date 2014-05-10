@@ -21,6 +21,7 @@ namespace TeamGame
         public Texture2D cursorTexture;
         public IPuzzle puzzle;
         public Player player;
+        public byte status;
 
         public PlayerState(Game game, Player player)
             : base(game)
@@ -30,6 +31,8 @@ namespace TeamGame
 
             this.player = player;
             this.Visible = false;
+
+            this.status = 12;
         }
 
         /// <summary>
@@ -67,6 +70,7 @@ namespace TeamGame
         {
             msg.Write((short)cursorPosition.X);
             msg.Write((short)cursorPosition.Y);
+            msg.Write((byte)status);
             if (puzzle != null)
             {
                 msg.Write(puzzle.ID());
@@ -81,6 +85,8 @@ namespace TeamGame
             this.Visible = true;
             cursorPosition.X = msg.ReadInt16();
             cursorPosition.Y = msg.ReadInt16();
+            status = msg.ReadByte();
+
             byte remotePuzzleType = msg.ReadByte();
             if (puzzle.ID() != remotePuzzleType)
             {
