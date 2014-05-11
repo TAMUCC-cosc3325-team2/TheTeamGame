@@ -68,7 +68,7 @@ namespace TeamGame.Puzzles
             goalRec = new Rectangle(90, 128, 22, 22);
             ball1Rec = new Rectangle(4, 0, 22, 22);
             ball2Rec = new Rectangle(223, 128, 22, 22);
-            block1Rec = new Rectangle(220, 45, 70, 17);
+            block1Rec = new Rectangle(180, 45, 70, 17);
             block2Rec = new Rectangle(200, 83, 50, 17);
 
             leftWall1 = new Rectangle(0, 0, 3, 141);
