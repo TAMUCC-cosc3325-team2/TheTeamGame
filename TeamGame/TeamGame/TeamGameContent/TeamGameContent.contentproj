@@ -236,15 +236,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="art\circleAnimation.png">
-      <Name>circleAnimation</Name>
+    <Compile Include="art\buttonPulseSheet.png">
+      <Name>buttonPulseSheet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="art\buttonPulseSheet.png">
-      <Name>buttonPulseSheet</Name>
+    <Compile Include="art\circleAnimation.png">
+      <Name>circleAnimation</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

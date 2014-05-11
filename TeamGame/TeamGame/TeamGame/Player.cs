@@ -23,6 +23,7 @@ namespace TeamGame
     public static class PlayerExtensions
     {
         public static byte rotations = 0;
+        public static bool individualColors = true;
 
         public static Team TeamOf(this Player p)
         {
@@ -44,6 +45,8 @@ namespace TeamGame
         /// <returns>One of RGBY</returns>
         public static Color RealColor(this Player p)
         {
+            if (!individualColors)
+                p = (Player)p.TeamOf();
             switch (p.ID())
             {
                 case 1:
@@ -153,6 +156,15 @@ namespace TeamGame
                 default:
                     return (float) (Math.PI * 1.5);
             }
+        }
+
+        public static List<Player> TeamList(this Player p)
+        {
+            List<Player> l = new List<Player>(4);
+            for (int i = 1; i < 5; i++)
+                l.Add(FromTeamAndID(p.TeamOf(), i));
+
+            return l;
         }
     }
 }
