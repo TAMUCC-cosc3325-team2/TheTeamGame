@@ -89,7 +89,7 @@ namespace TeamGame.Puzzles
         public new void PuzzleOver(bool p)
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte)(Game1.random.Next(5, 6));
+            byte randomPuzzle = (byte)(Game1.random.Next(2, 6)); //YOU FAGGOT
             Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
         }
 
