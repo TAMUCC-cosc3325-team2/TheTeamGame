@@ -24,6 +24,10 @@ namespace TeamGame.Puzzles
         HashSet<int> nPosition; // where amountToFind in columns*rows the sixes or nines are hiding
         bool previouslyClicked = false;
         TimeSpan timeToComplete;
+        
+        Animation buttonPress;
+        int numButtonPressPlays;
+        int countUpdates;
 
         SoundEffectInstance prompt;
 
@@ -46,6 +50,11 @@ namespace TeamGame.Puzzles
         {
             sixTexture = Game.Content.Load<Texture2D>("art/six");
             nineTexture = Game.Content.Load<Texture2D>("art/nine");
+
+            buttonPress = new Animation(Game, player, Game.Content.Load<Texture2D>("art/buttonPulseSheet"), 30, 30);
+            numButtonPressPlays = 1;
+            countUpdates = 0;
+
             if (player == Game1.localPlayer)
             {
                 prompt = Game.Content.Load<SoundEffect>(findSixes ? "audio/FindAllSixes" : "audio/FindAllNines").CreateInstance();
@@ -56,17 +65,16 @@ namespace TeamGame.Puzzles
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime); // draw healthbar
-
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
-
+            
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < columns; j++)
                     spriteBatch.Draw(findSixes?nineTexture:sixTexture, offset.Plus(j * width, i * height), Color.White);
             foreach (int i in nPosition)
                 spriteBatch.Draw(findSixes?sixTexture:nineTexture, offset.Plus((i % columns) * width, (int) (i / columns) * height), Color.White);
-
             spriteBatch.End();
+            buttonPress.Draw(gameTime);
         }
 
         public override void Update(GameTime gameTime)
@@ -89,6 +97,8 @@ namespace TeamGame.Puzzles
 
                 Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2() + offset);
 
+                buttonPress.AnimationStat = Status.Playing;
+
                 if (new Rectangle(0, 0, columns * width, rows * height).Contains(relativePos))
                 {
                     foreach (int i in nPosition) // check possible "Correct"s
@@ -105,6 +115,29 @@ namespace TeamGame.Puzzles
             }
             else
                 previouslyClicked = false;
+            if (buttonPress.AnimationStat == Status.Playing)
+            {
+                buttonPress.pos = Mouse.GetState().Position();
+                if (buttonPress.frame < 0)
+                    buttonPress.frame++;
+                if (countUpdates > 1)
+                {
+                    countUpdates = 0;
+                    buttonPress.frame++;
+                }
+                if (buttonPress.frame * buttonPress.frameWidth > buttonPress.textureSheet.Width)
+                {
+                    numButtonPressPlays--;
+                    buttonPress.frame = 0;
+                    if (numButtonPressPlays <= 0)
+                    {
+                        buttonPress.AnimationStat = Status.Waiting;
+                        buttonPress.frame = -1;
+                    }
+                }
+                buttonPress.scale = 1;
+                countUpdates++;
+            }
         }
 
         public new void PuzzleOver(bool p)

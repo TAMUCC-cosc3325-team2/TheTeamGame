@@ -93,7 +93,8 @@ namespace TeamGame
     public enum Status
     {
         Waiting,
-        Rotating
+        Rotating,
+        Playing
     }
 
     public class Triangle
