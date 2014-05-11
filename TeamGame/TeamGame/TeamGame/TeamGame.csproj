@@ -89,6 +89,7 @@
     <Compile Include="Puzzles\CreateASquare.cs" />
     <Compile Include="Puzzles\DragCircleAvoidBlocks.cs" />
     <Compile Include="Puzzles\IPuzzle.cs" />
+    <Compile Include="Puzzles\MemorizeWhatYouSee.cs" />
     <Compile Include="Puzzles\NumeralSearch.cs" />
     <Compile Include="Puzzles\TeamCirclesInOrder.cs" />
     <Compile Include="Puzzles\TeamFinalTest.cs" />
