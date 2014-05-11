@@ -60,10 +60,10 @@ namespace TeamGame.Puzzles
             tri3 = new Triangle();
             tri4 = new Triangle();
 
-            tri1.Location = new Rectangle(120, 27, 83, 42);
-            tri2.Location = new Rectangle(78, 69, 83, 42);
-            tri3.Location = new Rectangle(162, 69, 83, 42);
-            tri4.Location = new Rectangle(120, 111, 83, 42);
+            tri1.Location = new Rectangle(120, 27, 84, 42);
+            tri2.Location = new Rectangle(78, 69, 84, 42);
+            tri3.Location = new Rectangle(162, 69, 84, 42);
+            tri4.Location = new Rectangle(120, 111, 84, 42);
 
             //Are you proud of me yet?
             tri1.Rot = (randNum = Game1.random.Next(0,2)) == 0 ? Orientation.Up : randNum == 1 ? Orientation.Left : Orientation.Right;
@@ -101,11 +101,6 @@ namespace TeamGame.Puzzles
 
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
-            spriteBatch.DrawString(font, "tri1Rot: " + tri1.Rot.ToString(), new Vector2(0, 0) + mouse.Position(), Color.White);
-            spriteBatch.DrawString(font, "tri2Rot: " + tri2.Rot.ToString(), new Vector2(0, 15) + mouse.Position(), Color.White);
-            spriteBatch.DrawString(font, "tri3Rot: " + tri3.Rot.ToString(), new Vector2(0, 30) + mouse.Position(), Color.White);
-            spriteBatch.DrawString(font, "tri4Rot: " + tri4.Rot.ToString(), new Vector2(0, 45) + mouse.Position(), Color.White);
-
             foreach (Triangle tri in Triangles)
                 spriteBatch.Draw(triangle, tri.Location.Location.ToVector2(), null, player.ColorOf(), MathHelper.ToRadians(tri.Degrees),
                 new Vector2(tri.Location.Width/2, tri.Location.Height), 1.0f, SpriteEffects.None, 0f);
@@ -218,13 +213,13 @@ namespace TeamGame.Puzzles
 
         public override void Decode(NetIncomingMessage msg)
         {
-            tri1.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
+            tri1.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri1.Degrees = msg.ReadInt16();
-            tri2.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
+            tri2.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri2.Degrees = msg.ReadInt16();
-            tri3.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
+            tri3.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri3.Degrees = msg.ReadInt16();
-            tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 83, 42);
+            tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri4.Degrees = msg.ReadInt16();
         }
     }
