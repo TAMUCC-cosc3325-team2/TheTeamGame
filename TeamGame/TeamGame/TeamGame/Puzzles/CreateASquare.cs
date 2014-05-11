@@ -122,17 +122,10 @@ namespace TeamGame.Puzzles
 
             Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2());
 
-            foreach (Triangle tri in Triangles)
-            {
-                double radius = Math.Sqrt(Math.Pow(tri.Location.Width/2, 2) + Math.Pow(tri.Location.Height/2, 2));
-                if((relativePos - tri.Location.Location.ToVector2()).Length() <= radius)
-                {
-                    if(prevMouse.LeftButton == ButtonState.Released && mouse.LeftButton == ButtonState.Pressed && tri.Stat == Status.Waiting)
-                    {
+            if (mouse.LeftButton.IsClicked() && prevMouse.LeftButton.IsClicked())
+                foreach (Triangle tri in Triangles)
+                    if (tri.Contains(relativePos) && tri.Stat == Status.Waiting)
                         tri.Stat = Status.Rotating;
-                    }
-                }
-            }
 
             foreach (Triangle tri in Triangles)
             {

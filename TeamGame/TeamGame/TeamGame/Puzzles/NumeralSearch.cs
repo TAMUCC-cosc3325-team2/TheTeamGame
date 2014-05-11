@@ -23,6 +23,7 @@ namespace TeamGame.Puzzles
         bool findSixes = (Game1.random.Next(0, 2) == 1); // false -> player tries to find 9's
         HashSet<int> nPosition; // where amountToFind in columns*rows the sixes or nines are hiding
         bool previouslyClicked = false;
+        TimeSpan timeToComplete;
 
         SoundEffectInstance prompt;
 
@@ -37,6 +38,8 @@ namespace TeamGame.Puzzles
             nPosition = new HashSet<int>();
             for (int i = 0; i < amountToFind; i++)
                 nPosition.Add(Game1.random.Next(0, columns*rows));
+
+            timeToComplete = new TimeSpan(0, 0, 0, 0, 4000);
         }
 
         public override void Initialize()
@@ -73,6 +76,10 @@ namespace TeamGame.Puzzles
 
             if (nPosition.Count == 0) // all have been found
                 PuzzleOver(true);
+            
+            timeToComplete -= gameTime.ElapsedGameTime.Duration();
+            if (timeToComplete.TotalMilliseconds <= 0)
+                PuzzleOver(false);
 
             if (Mouse.GetState().LeftButton.IsClicked())
             {

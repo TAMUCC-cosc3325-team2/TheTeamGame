@@ -71,6 +71,8 @@ namespace TeamGame.Puzzles
 
         public override void Update(GameTime gameTime)
         {
+            if (countUpdates == 0)
+                    PuzzleOver(true);
             displacement *= 1.05f;
 
             if (player != Game1.localPlayer)
@@ -82,16 +84,12 @@ namespace TeamGame.Puzzles
                 Game.Content.Load<SoundEffect>("audio/" + player.ClockwisePlayer().ColorName()).Play();
                 Game.Content.Load<SoundEffect>("audio/Status" + (puzzleSuccess ? "In" : "De") + "creased").Play();
             }
-                if (countUpdates == 0)
-                    PuzzleOver(true);
-            
-
         }
 
         public new void PuzzleOver(bool p)
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte)(Game1.random.Next(2, 6));
+            byte randomPuzzle = (byte)(Game1.random.Next(5, 6));
             Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
         }
 

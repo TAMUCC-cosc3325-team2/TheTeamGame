@@ -121,5 +121,28 @@ namespace TeamGame
             get;
             set;
         }
+
+        public bool Contains(Vector2 pos)
+        {
+            pos -= Location.Location.ToVector2();
+            pos = Vector2.Transform(pos, Matrix.CreateRotationZ(MathHelper.ToRadians(Degrees)));
+            switch (Degrees)
+            {
+                case 0:
+                case 180:
+                    if (pos.Y > 0)
+                        return false;
+                    break;
+                case 90:
+                case 270:
+                    if (pos.Y < 0)
+                        return false;
+                    break;
+                default:
+                    break;
+            }
+            pos.Y = Location.Height - Math.Abs(pos.Y);
+            return (pos.X < pos.Y && pos.X > -pos.Y);
+        }
     }
 }
