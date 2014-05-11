@@ -60,7 +60,8 @@ namespace TeamGame
             { typeof(Puzzles.NumeralSearch), 2},
             { typeof(Puzzles.DragCircleAvoidBlocks), 3},
             { typeof(Puzzles.TextNamesColorOfCircle), 4},
-            { typeof(Puzzles.CreateASquare), 5}
+            { typeof(Puzzles.CreateASquare), 5},
+            { typeof(Puzzles.TeamCirclesInOrder), 10}
             };
 
         /// <summary>

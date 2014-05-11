@@ -91,7 +91,7 @@
     <Compile Include="Puzzles\NumeralSearch.cs" />
     <Compile Include="Puzzles\TeamCirclesInOrder.cs" />
     <Compile Include="Puzzles\TextNamesColorOfCircle.cs" />
-    <Compile Include="Puzzles\TPuzzlecs.cs" />
+    <Compile Include="Puzzles\TPuzzle.cs" />
     <Compile Include="Puzzles\Transition.cs" />
   </ItemGroup>
   <ItemGroup>

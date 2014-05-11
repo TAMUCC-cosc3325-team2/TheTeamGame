@@ -9,7 +9,11 @@ namespace TeamGame
     public enum Player
     {
         // None, t1p1, t2p1, t3p1, t4p1, t1p2, t2p2, t3p2, t4p2, t1p3, t2p3, t3p3, t4p3, t1p4, t2p4, t3p4, t4p4
-        None, t1p1, t1p2, t2p1, t2p2, t1p4, t1p3, t2p4, t2p3, t3p1, t3p2, t4p1, t4p2, t3p4, t3p3, t4p4, t4p3
+        None, 
+        t1p1, t1p2, t2p1, t2p2, 
+        t1p4, t1p3, t2p4, t2p3, 
+        t3p1, t3p2, t4p1, t4p2, 
+        t3p4, t3p3, t4p4, t4p3
     }
     public enum Team
     {
@@ -24,6 +28,10 @@ namespace TeamGame
         {
             return (Team) (Enum.GetName(typeof(Player), p)[1] - 48);
         }
+        public static byte ID(this Player p)
+        {
+            return (byte) (Enum.GetName(typeof(Player), p)[3] - '0');
+        }
         public static Player FromTeamAndID(Team tid, int pid)
         {
             return (Player)Enum.Parse(typeof(Player), Enum.GetName(typeof(Team), tid) + "p" + pid);
@@ -36,15 +44,15 @@ namespace TeamGame
         /// <returns>One of RGBY</returns>
         public static Color RealColor(this Player p)
         {
-            switch (Enum.GetName(typeof(Player), p)[3])
+            switch (p.ID())
             {
-                case '1':
+                case 1:
                     return Color.Red;
-                case '2':
+                case 2:
                     return Color.FromNonPremultiplied(25, 255, 10, 255);
-                case '3':
+                case 3:
                     return Color.Blue;
-                case '4':
+                case 4:
                     return Color.Yellow;
                 default:
                     return Color.Orange;
@@ -107,7 +115,22 @@ namespace TeamGame
 
         public static Rectangle GetRegion(this Team t)
         {
-            return Player.t1p1.GetRegion();
+            int border = 4; // two between teams
+            int rw = 504, rh = 354;
+
+            switch (t)
+            {
+                case Team.t1:
+                    return new Rectangle(border, border, rw, rh);
+                case Team.t2:
+                    return new Rectangle(3 * border + rw, border, rw, rh);
+                case Team.t3:
+                    return new Rectangle(border, 3 * border + rh, rw, rh);
+                case Team.t4:
+                    return new Rectangle(3 * border + rw, 3 * border + rh, rw, rh);
+                default:
+                    return new Rectangle(350, 350, rw, rh);
+            }
         }
 
         public static Player ClockwisePlayer(this Player p)

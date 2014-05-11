@@ -8,10 +8,16 @@ namespace TeamGame.Puzzles
 {
     class TPuzzle : IPuzzle
     {
+
         public TPuzzle(Game game, Player player)
             : base(game, player)
         {
             
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            // base.Draw(gameTime); // Do not draw player status bars
         }
 
 
