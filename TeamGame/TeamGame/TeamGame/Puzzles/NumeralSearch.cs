@@ -28,6 +28,7 @@ namespace TeamGame.Puzzles
         Animation buttonPress;
         int numButtonPressPlays;
         int countUpdates;
+        bool gameOver;
 
         SoundEffectInstance prompt;
 
@@ -44,6 +45,7 @@ namespace TeamGame.Puzzles
                 nPosition.Add(Game1.random.Next(0, columns*rows));
 
             timeToComplete = new TimeSpan(0, 0, 0, 0, (int) (40 / (double) Game1.gameDifficulty));
+            gameOver = false;
         }
 
         public override void Initialize()
@@ -89,7 +91,7 @@ namespace TeamGame.Puzzles
             if (timeToComplete.TotalMilliseconds <= 0)
                 PuzzleOver(false);
 
-            if (Mouse.GetState().LeftButton.IsClicked())
+            if (Mouse.GetState().LeftButton.IsClicked() && !gameOver)
             {
                 if (previouslyClicked)
                     return;
@@ -110,11 +112,16 @@ namespace TeamGame.Puzzles
                         }
                     }
                     // else they clicked the wrong number
-                    PuzzleOver(false);
+                    // first wait for animation to die before calling PuzzleOver
+                    gameOver = true;
                 }
             }
             else
                 previouslyClicked = false;
+
+            if (buttonPress.AnimationStat == Status.Waiting && gameOver)
+                PuzzleOver(false);
+
             if (buttonPress.AnimationStat == Status.Playing)
             {
                 buttonPress.pos = Mouse.GetState().Position();
