@@ -67,6 +67,9 @@ namespace TeamGame.Puzzles
         {
             base.Draw(gameTime); // draw healthbar
 
+            if (textColor == ballColor) // not yet updated so don't draw that first frame
+                return;
+
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(/*SpriteSortMode.Deferred, null, null, null, null, null, this.matrix*/);
 

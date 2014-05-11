@@ -60,10 +60,10 @@ namespace TeamGame.Puzzles
             tri3 = new Triangle();
             tri4 = new Triangle();
 
-            tri1.Location = new Rectangle(120, 27, 84, 42);
-            tri2.Location = new Rectangle(78, 69, 84, 42);
-            tri3.Location = new Rectangle(162, 69, 84, 42);
-            tri4.Location = new Rectangle(120, 111, 84, 42);
+            tri1.Location = new Rectangle(120, 37, 84, 42);
+            tri2.Location = new Rectangle(78, 79, 84, 42);
+            tri3.Location = new Rectangle(162, 79, 84, 42);
+            tri4.Location = new Rectangle(120, 121, 84, 42);
 
             //Are you proud of me yet?
             tri1.Rot = (randNum = Game1.random.Next(0,2)) == 0 ? Orientation.Up : randNum == 1 ? Orientation.Left : Orientation.Right;
@@ -103,7 +103,7 @@ namespace TeamGame.Puzzles
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             foreach (Triangle tri in Triangles)
                 spriteBatch.Draw(triangle, tri.Location.Location.ToVector2(), null, player.ColorOf(), MathHelper.ToRadians(tri.Degrees),
-                new Vector2(tri.Location.Width/2, tri.Location.Height), 1.0f, SpriteEffects.None, 0f);
+                                 new Vector2(tri.Location.Width/2, tri.Location.Height), 1.0f, SpriteEffects.None, 0f);
             spriteBatch.End();
         }
 

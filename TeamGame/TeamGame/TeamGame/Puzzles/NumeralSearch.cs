@@ -39,7 +39,7 @@ namespace TeamGame.Puzzles
             for (int i = 0; i < amountToFind; i++)
                 nPosition.Add(Game1.random.Next(0, columns*rows));
 
-            timeToComplete = new TimeSpan(0, 0, 0, 0, (int) (1 / (float) Game1.gameDifficulty));
+            timeToComplete = new TimeSpan(0, 0, 0, 0, (int) (40 / (double) Game1.gameDifficulty));
         }
 
         public override void Initialize()

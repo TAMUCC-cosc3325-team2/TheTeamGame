@@ -11,12 +11,22 @@ namespace TeamGame
         // None, t1p1, t2p1, t3p1, t4p1, t1p2, t2p2, t3p2, t4p2, t1p3, t2p3, t3p3, t4p3, t1p4, t2p4, t3p4, t4p4
         None, t1p1, t1p2, t2p1, t2p2, t1p4, t1p3, t2p4, t2p3, t3p1, t3p2, t4p1, t4p2, t3p4, t3p3, t4p4, t4p3
     }
+    public enum Team
+    {
+        None, t1, t2, t3, t4
+    }
 
     public static class PlayerExtensions
     {
-        public static int TeamOf(this Player p)
+        public static byte rotations = 0;
+
+        public static Team TeamOf(this Player p)
         {
-            return Enum.GetName(typeof(Player), p)[1] - 48;
+            return (Team) (Enum.GetName(typeof(Player), p)[1] - 48);
+        }
+        public static Player FromTeamAndID(Team tid, int pid)
+        {
+            return (Player)Enum.Parse(typeof(Player), Enum.GetName(typeof(Team), tid) + "p" + pid);
         }
 
         /// <summary>
@@ -85,19 +95,30 @@ namespace TeamGame
             int row = (int) (p - 1) / 4;
             int col = (int) (p - 1) % 4;
 
-            return new Rectangle(col * rw + (col + 1) * border + ((p.TeamOf() == 2 || p.TeamOf() == 4) ? border : 0),
-                                 row * rh + (row + 1) * border + ((p.TeamOf() == 3 || p.TeamOf() == 4) ? border : 0),
-                                 rw,
-                                 rh);
+            for (int i = 0; i < rotations; i++)
+                p = p.ClockwisePlayer();
 
+            return new Rectangle(col * rw + (col + 1) * border + (((int)p.TeamOf() == 2 || (int)p.TeamOf() == 4) ? border : 0),
+                                     row * rh + (row + 1) * border + (((int)p.TeamOf() == 3 || (int)p.TeamOf() == 4) ? border : 0),
+                                     rw,
+                                     rh);
+
+        }
+
+        public static Rectangle GetRegion(this Team t)
+        {
+            return Player.t1p1.GetRegion();
         }
 
         public static Player ClockwisePlayer(this Player p)
         {
-            return (Player) Enum.Parse(typeof(Player), "t" + p.TeamOf() + "p" + ((((int) Enum.GetName(typeof(Player), p)[3]) % 4) + 1));
+            return (Player) Enum.Parse(typeof(Player), p.TeamOf() + "p" + ((((int) Enum.GetName(typeof(Player), p)[3]) % 4) + 1));
         }
         public static float ClockwiseAngle(this Player p)
         {
+            for (int i = 0; i < rotations; i++)
+                p = p.ClockwisePlayer();
+
             switch (Enum.GetName(typeof(Player), p)[3])
             {
                 case '1':
