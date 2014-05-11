@@ -93,13 +93,12 @@ namespace TeamGame.Puzzles
 
             if (Mouse.GetState().LeftButton.IsClicked() && !gameOver)
             {
+                buttonPress.AnimationStat = Status.Playing;
                 if (previouslyClicked)
                     return;
                 previouslyClicked = true;
 
                 Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2() + offset);
-
-                buttonPress.AnimationStat = Status.Playing;
 
                 if (new Rectangle(0, 0, columns * width, rows * height).Contains(relativePos))
                 {
