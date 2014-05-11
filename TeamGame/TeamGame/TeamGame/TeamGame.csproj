@@ -91,6 +91,7 @@
     <Compile Include="Puzzles\IPuzzle.cs" />
     <Compile Include="Puzzles\NumeralSearch.cs" />
     <Compile Include="Puzzles\TeamCirclesInOrder.cs" />
+    <Compile Include="Puzzles\TeamFinalTest.cs" />
     <Compile Include="Puzzles\TextNamesColorOfCircle.cs" />
     <Compile Include="Puzzles\TPuzzle.cs" />
     <Compile Include="Puzzles\Transition.cs" />

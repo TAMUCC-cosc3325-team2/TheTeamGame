@@ -61,7 +61,8 @@ namespace TeamGame
             { typeof(Puzzles.DragCircleAvoidBlocks), 3},
             { typeof(Puzzles.TextNamesColorOfCircle), 4},
             { typeof(Puzzles.CreateASquare), 5},
-            { typeof(Puzzles.TeamCirclesInOrder), 10}
+            { typeof(Puzzles.TeamCirclesInOrder), 10},
+            { typeof(Puzzles.TeamFinalTest), 15}
             };
 
         /// <summary>
