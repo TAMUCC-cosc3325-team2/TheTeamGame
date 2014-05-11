@@ -98,22 +98,35 @@ namespace TeamGame
             return (p == Game1.localPlayer);
         }
 
+        public static Rectangle GetRelativeRegion(this Player p)
+        {
+            int border = 4; // two borders between teams
+            int rw = 250, rh = 175;
+
+            for (int i = 0; i < rotations; i++)
+                p = p.ClockwisePlayer();
+
+            int row = (p.ID() == 3 || p.ID() == 4) ? 1 : 0;
+            int col = (p.ID() == 1 || p.ID() == 4) ? 0 : 1;
+
+            return new Rectangle(col * (rw + border), row * (rh + border), rw, rh);
+        }
+
         public static Rectangle GetRegion(this Player p)
         {
             int border = 4; // two borders between teams
             int rw = 250, rh = 175;
 
-            int row = (int) (p - 1) / 4;
-            int col = (int) (p - 1) % 4;
-
             for (int i = 0; i < rotations; i++)
                 p = p.ClockwisePlayer();
+
+            int row = (int) (p - 1) / 4;
+            int col = (int) (p - 1) % 4;
 
             return new Rectangle(col * rw + (col + 1) * border + (((int)p.TeamOf() == 2 || (int)p.TeamOf() == 4) ? border : 0),
                                      row * rh + (row + 1) * border + (((int)p.TeamOf() == 3 || (int)p.TeamOf() == 4) ? border : 0),
                                      rw,
                                      rh);
-
         }
 
         public static Rectangle GetRegion(this Team t)

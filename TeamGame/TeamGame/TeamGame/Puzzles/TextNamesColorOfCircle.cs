@@ -48,7 +48,7 @@ namespace TeamGame.Puzzles
                 if (textColor == ballColor)
                     textColor = (MyColor)(((int) textColor + 1) % 4);
                 textWord = (MyColor)((Game1.random.Next(1, 4) + (int)textWord) % 4);
-                if (textWord == textColor)
+                if (textWord == textColor && Game1.random.Next(2) == 1)
                     textWord = ballColor;
                 timesDisplayed = 0;
                 return;

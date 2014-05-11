@@ -57,7 +57,7 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            base.Draw(gameTime); // draw team status bar
 
             Rectangle region = player.TeamOf().GetRegion();
 
@@ -70,12 +70,13 @@ namespace TeamGame.Puzzles
                 spriteBatch.DrawString(Game1.font, "" + buttonText[i], position + new Vector2(16, 16), Color.White, 0, Game1.font.MeasureString("" + buttonText[i]) / 2, 1.0f, SpriteEffects.None, 0.5f);
                 spriteBatch.Draw(Game.Content.Load<Texture2D>("art/circleAnimation"), position, new Rectangle(0, 0, 36, 36), player.ColorOf());
             }
-            // spriteBatch.DrawString(Game1.font, " " + buttonClicked, Mouse.GetState().Position(), Color.White);
+            //spriteBatch.DrawString(Game1.font, " " +(buttonPos(buttons[0]) - (Mouse.GetState().Position() - new Vector2(16, 16))).LengthSquared(), Mouse.GetState().Position(), Color.White);
             spriteBatch.End();
         }
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             if (!player.IsLocal()) // only check successes locally
                 return;
 
@@ -99,13 +100,15 @@ namespace TeamGame.Puzzles
 
                 foreach (byte b in allButtons)
                 {
-                    if ((buttonPos(b) - (Mouse.GetState().Position() - player.TeamOf().GetRegion().Location.ToVector2() - new Vector2(16, 16))).LengthSquared() < 289)
+                    if ((buttonPos(b) - (Mouse.GetState().Position() - new Vector2(16, 16))).LengthSquared() < 289)
                     {
                         if (b == this.buttons[0] && buttonText[0] == TeamCirclesInOrderHelper.nextToClick) // correct
                         {
                             buttons.RemoveAt(0);
                             buttonText.RemoveAt(0);
                             correct = true;
+                            TeamCirclesInOrderHelper.nextToClick += 1;
+                            Game1.pStates[player].status = MathHelper.Clamp((float) Game1.pStates[player].status + 3, 0, 12);
                         }
                         else // incorrect
                         {
@@ -147,17 +150,28 @@ namespace TeamGame.Puzzles
             }
             
             buttons = new List<byte>(5);
+            buttonText = new List<byte>(5);
             for (int i = 0; i < 5; i++)
             {
                 temp = msg.ReadByte();
                 if (temp != 255)
                     buttons.Add(temp);
+                buttonText.Add((byte)((4 * i) + player.ID()));
             }
+            for (int i = buttons.Count; i < 5; i++)
+                buttonText.RemoveAt(0);
         }
 
         private void spawnAnimation(Vector2 position, bool correct)
         {
             
+        }
+
+        public override void PuzzleOver(bool Correct)
+        {
+            this.Game.Components.Remove(this);
+            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
+
         }
 
     }

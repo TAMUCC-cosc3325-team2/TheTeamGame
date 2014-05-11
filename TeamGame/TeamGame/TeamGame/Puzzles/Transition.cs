@@ -15,8 +15,9 @@ namespace TeamGame.Puzzles
 
         int countUpdates = 180;
         bool puzzleSuccess;
-        Texture2D plusTexture, chevronTexture;
+        Texture2D plusTexture, chevronTexture, fadeTexture;
         Vector2 displacement, chevronPosition;
+        int fadeAlpha = 0, fadeStep = 5; 
 
         public Transition(Game game, Player player, bool puzzleSuccess)
             : base(game, player)
@@ -38,19 +39,29 @@ namespace TeamGame.Puzzles
         {
             // displacement = player.ClockwisePlayer().GetRegion().Center.ToVector2() - drawRegion.Center.ToVector2();
             displacement = Vector2.Transform(new Vector2(35,0), Matrix.CreateRotationZ(player.ClockwiseAngle()));
-            plusTexture = Game.Content.Load<Texture2D>("art/CorrectPlus");
-            chevronTexture = Game.Content.Load<Texture2D>("art/CorrectChevronRight");
+            plusTexture = Game.Content.Load<Texture2D>("art/correctPlus");
+            chevronTexture = Game.Content.Load<Texture2D>("art/correctChevronRight");
             chevronPosition = drawRegion.Center.ToVector2();
+            fadeTexture = Game.Content.Load<Texture2D>("art/transitionFade4");
         }
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            if (starting)
+                return;
+            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice); // draw pulsing success/failure
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            Rectangle playerRegion = player.GetRegion();
+            Rectangle relative = player.GetRelativeRegion();
+            spriteBatch.Draw(fadeTexture, player.GetRegion(), player.GetRelativeRegion(), puzzleSuccess?(new Color(64, 255, 64, fadeAlpha)):(new Color(255, 69, 0, fadeAlpha)));
+            spriteBatch.End();
+
+            base.Draw(gameTime); // draw status bars over fade
 
             if (!puzzleSuccess)
                 return;
-
-            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            
+            // draw success plus
             if (this.countUpdates > 60)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
@@ -61,7 +72,7 @@ namespace TeamGame.Puzzles
             
             Game.GraphicsDevice.ScissorRectangle = this.drawRegion;
             
-            RasterizerState rs = new RasterizerState();
+            RasterizerState rs = new RasterizerState(); // draw success chevron
             rs.ScissorTestEnable = true;
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, rs);
             spriteBatch.Draw(chevronTexture, chevronPosition + displacement, null, player.ColorOf(), player.ClockwiseAngle(), new Vector2(42,35), 1.0f, SpriteEffects.None, 0);
@@ -71,9 +82,12 @@ namespace TeamGame.Puzzles
 
         public override void Update(GameTime gameTime)
         {
-            if (countUpdates == 0)
+            if (countUpdates == 0 && Game1.pStates[player].status > 0)
                     PuzzleOver(true);
             displacement *= 1.05f;
+            fadeAlpha += fadeStep;
+            if (fadeAlpha >= 300)
+                fadeStep *= -1;
 
             if (player != Game1.localPlayer)
                 return;
@@ -89,7 +103,7 @@ namespace TeamGame.Puzzles
         public new void PuzzleOver(bool p)
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte)(Game1.random.Next(4,5));
+            byte randomPuzzle = (byte)(Game1.random.Next(2,6));
             Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
         }
 

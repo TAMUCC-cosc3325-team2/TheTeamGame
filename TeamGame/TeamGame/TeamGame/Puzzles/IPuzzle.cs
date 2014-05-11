@@ -23,7 +23,7 @@ namespace TeamGame
         public Player player;
         public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
 
-        Texture2D statusBarTexture;
+        public Texture2D statusBarTexture;
 
         public IPuzzle(Game game, Player player)
             : base(game)
@@ -61,6 +61,7 @@ namespace TeamGame
             { typeof(Puzzles.DragCircleAvoidBlocks), 3},
             { typeof(Puzzles.TextNamesColorOfCircle), 4},
             { typeof(Puzzles.CreateASquare), 5},
+            { typeof(Puzzles.MemorizeWhatYouSee), 6},
             { typeof(Puzzles.TeamCirclesInOrder), 10},
             { typeof(Puzzles.TeamFinalTest), 15}
             };
