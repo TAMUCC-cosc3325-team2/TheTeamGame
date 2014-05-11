@@ -197,29 +197,29 @@ namespace TeamGame.Puzzles
 
         public override void Encode(NetOutgoingMessage msg)
         {
-            msg.Write((short)tri1.Location.X);
-            msg.Write((short)tri1.Location.Y);
+            //msg.Write((short)tri1.Location.X);
+            //msg.Write((short)tri1.Location.Y);
             msg.Write((short)tri1.Degrees);
-            msg.Write((short)tri2.Location.X);
-            msg.Write((short)tri2.Location.Y);
+            //msg.Write((short)tri2.Location.X);
+            //msg.Write((short)tri2.Location.Y);
             msg.Write((short)tri2.Degrees);
-            msg.Write((short)tri3.Location.X);
-            msg.Write((short)tri3.Location.Y);
+            //msg.Write((short)tri3.Location.X);
+            //msg.Write((short)tri3.Location.Y);
             msg.Write((short)tri3.Degrees);
-            msg.Write((short)tri4.Location.X);
-            msg.Write((short)tri4.Location.Y);
+            //msg.Write((short)tri4.Location.X);
+            //msg.Write((short)tri4.Location.Y);
             msg.Write((short)tri4.Degrees);
         }
 
         public override void Decode(NetIncomingMessage msg)
         {
-            tri1.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
+            //tri1.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri1.Degrees = msg.ReadInt16();
-            tri2.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
+            //tri2.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri2.Degrees = msg.ReadInt16();
-            tri3.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
+            //tri3.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri3.Degrees = msg.ReadInt16();
-            tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
+            //tri4.Location = new Rectangle(msg.ReadInt16(), msg.ReadInt16(), 84, 42);
             tri4.Degrees = msg.ReadInt16();
         }
     }

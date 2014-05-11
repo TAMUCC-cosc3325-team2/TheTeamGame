@@ -20,6 +20,7 @@ namespace TeamGame
     {
         public NetClient client;
         TimeSpan clock;
+        NetOutgoingMessage lastMessageSent;
         
 
         public Net(Game game)
@@ -58,7 +59,7 @@ namespace TeamGame
         {
             client.Connect("9001.no-ip.org", 14248);
 
-            
+            lastMessageSent = client.CreateMessage();
 
             base.Initialize();
         }
@@ -124,7 +125,11 @@ namespace TeamGame
         {
             NetOutgoingMessage msg = client.CreateMessage(16);
             Game1.pStates[Game1.localPlayer].Encode(msg);
+            if (lastMessageSent.Data != null && msg.Data.SequenceEqual(lastMessageSent.Data))
+                return;
+
             client.SendMessage(msg, NetDeliveryMethod.UnreliableSequenced, (int) Game1.localPlayer);
+            lastMessageSent = msg;
         }
         public void NotifyStatusIncrease()
         {
