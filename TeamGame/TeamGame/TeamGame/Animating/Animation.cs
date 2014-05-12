@@ -19,7 +19,6 @@ namespace TeamGame
         public float scale;
 
         public int numButtonPressPlays;
-        int countUpdates;
 
         public Status AnimationStat
         {
@@ -29,6 +28,14 @@ namespace TeamGame
 
         public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
 
+        /// <summary>
+        /// Animation base class. 
+        /// </summary>
+        /// <param name="game">The game object associated with this puzzle.</param>
+        /// <param name="player">The player who may complete this puzzle.</param>
+        /// <param name="texture">The sprite sheet for the animation (must be 1 frame tall by x frames wide.</param>
+        /// <param name="width">The width of a frame.</param>
+        /// <param name="height">The height of a frame.</param>
         public Animation(Game game, Player player, Texture2D texture, int width, int height)
             : base(game)
         {
@@ -37,7 +44,6 @@ namespace TeamGame
             textureSheet = texture;
             frameWidth = width;
             frameHeight = height;
-            countUpdates = 0;
 
             AnimationStat = Status.Waiting;
 
@@ -51,11 +57,7 @@ namespace TeamGame
             {
                 if (frame < 0)
                     frame++;
-                if (countUpdates > 1)
-                {
-                    countUpdates = 0;
-                    frame++;
-                }
+                frame++;
                 if (frame * frameWidth > textureSheet.Width)
                 {
                     numButtonPressPlays--;
@@ -67,7 +69,6 @@ namespace TeamGame
                     }
                 }
                 scale = 1;
-                countUpdates++;
             }
         }
 
