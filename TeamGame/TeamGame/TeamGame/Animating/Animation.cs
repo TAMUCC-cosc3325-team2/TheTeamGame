@@ -18,6 +18,9 @@ namespace TeamGame
         public Vector2 pos;
         public float scale;
 
+        public int numButtonPressPlays;
+        int countUpdates;
+
         public Status AnimationStat
         {
             get;
@@ -34,6 +37,7 @@ namespace TeamGame
             textureSheet = texture;
             frameWidth = width;
             frameHeight = height;
+            countUpdates = 0;
 
             AnimationStat = Status.Waiting;
 
@@ -41,7 +45,31 @@ namespace TeamGame
         }
 
         public override void Initialize() { }
-        public override void Update(GameTime gameTime) { return; }
+        public override void Update(GameTime gameTime) 
+        { 
+            if(AnimationStat == Status.Playing)
+            {
+                if (frame < 0)
+                    frame++;
+                if (countUpdates > 1)
+                {
+                    countUpdates = 0;
+                    frame++;
+                }
+                if (frame * frameWidth > textureSheet.Width)
+                {
+                    numButtonPressPlays--;
+                    frame = 0;
+                    if (numButtonPressPlays <= 0)
+                    {
+                        AnimationStat = Status.Waiting;
+                        frame = -1;
+                    }
+                }
+                scale = 1;
+                countUpdates++;
+            }
+        }
 
         public override void Draw(GameTime gameTime)
         {

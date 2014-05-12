@@ -26,8 +26,6 @@ namespace TeamGame.Puzzles
         TimeSpan timeToComplete;
         
         Animation buttonPress;
-        int numButtonPressPlays;
-        int countUpdates;
         bool gameOver;
 
         SoundEffectInstance prompt;
@@ -54,8 +52,7 @@ namespace TeamGame.Puzzles
             nineTexture = Game.Content.Load<Texture2D>("art/nine");
 
             buttonPress = new Animation(Game, player, Game.Content.Load<Texture2D>("art/buttonPulseSheet"), 30, 30);
-            numButtonPressPlays = 1;
-            countUpdates = 0;
+            buttonPress.numButtonPressPlays = 1;
 
             if (player == Game1.localPlayer)
             {
@@ -94,6 +91,7 @@ namespace TeamGame.Puzzles
             if (Mouse.GetState().LeftButton.IsClicked() && !gameOver)
             {
                 buttonPress.AnimationStat = Status.Playing;
+                buttonPress.pos = Mouse.GetState().Position();
                 if (previouslyClicked)
                     return;
                 previouslyClicked = true;
@@ -120,30 +118,7 @@ namespace TeamGame.Puzzles
 
             if (buttonPress.AnimationStat == Status.Waiting && gameOver)
                 PuzzleOver(false);
-
-            if (buttonPress.AnimationStat == Status.Playing)
-            {
-                buttonPress.pos = Mouse.GetState().Position();
-                if (buttonPress.frame < 0)
-                    buttonPress.frame++;
-                if (countUpdates > 1)
-                {
-                    countUpdates = 0;
-                    buttonPress.frame++;
-                }
-                if (buttonPress.frame * buttonPress.frameWidth > buttonPress.textureSheet.Width)
-                {
-                    numButtonPressPlays--;
-                    buttonPress.frame = 0;
-                    if (numButtonPressPlays <= 0)
-                    {
-                        buttonPress.AnimationStat = Status.Waiting;
-                        buttonPress.frame = -1;
-                    }
-                }
-                buttonPress.scale = 1;
-                countUpdates++;
-            }
+            
         }
 
         public new void PuzzleOver(bool p)
