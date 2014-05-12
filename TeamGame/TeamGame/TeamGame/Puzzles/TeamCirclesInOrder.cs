@@ -26,13 +26,18 @@ namespace TeamGame.Puzzles
         byte buttonClicked = 255;
         bool correct = false;
 
-        Texture2D circleTexture;
+        Animation buttonCorrect, buttonIncorrect;
+
+        Texture2D circleTexture, circleIncorrect;
 
         public TeamCirclesInOrder(Game game, Player player)
             : base(game, player)
         {
             TeamCirclesInOrderHelper.nextToClick = 1;
             circleTexture = game.Content.Load<Texture2D>("art/circleAnimation");
+            circleIncorrect = game.Content.Load<Texture2D>("art/buttonIncorrect");
+            buttonCorrect = new Animation(Game, player, circleTexture, 36, 36);
+            buttonIncorrect = new Animation(Game, player, circleIncorrect, 48, 48);
         }
 
         public override void Initialize()
@@ -123,7 +128,7 @@ namespace TeamGame.Puzzles
                             buttonClicked = b; 
                             correct = false;
                         }
-                        spawnAnimation(buttonPos(b), correct, player.ColorOf());
+                        spawnAnimation(new Vector2(buttonPos(b).X + 18, buttonPos(b).Y + 18), correct);
                         return;
                     }
                 }
@@ -153,7 +158,6 @@ namespace TeamGame.Puzzles
             buttonClicked = msg.ReadByte();
             if (buttonClicked != 255)
             {
-                spawnAnimation(buttonPos(buttonClicked), msg.ReadBoolean(), player.ColorOf());
                 buttonClicked = 255;
             }
             
@@ -170,10 +174,14 @@ namespace TeamGame.Puzzles
                 buttonText.RemoveAt(0);
         }
 
-        private void spawnAnimation(Vector2 position, bool correct, Color color)
+        private void spawnAnimation(Vector2 position, bool correct)
         {
-            if (!correct)
-                Game.Components.Add(new mistakeAnimation(this.Game, position));
+            buttonCorrect.pos = position;
+            buttonIncorrect.pos = position;
+            if (correct)
+                buttonCorrect.AnimationStat = Status.Playing;
+            else
+                buttonIncorrect.AnimationStat = Status.Playing;
         }
 
         public override void PuzzleOver(bool Correct)
@@ -181,36 +189,11 @@ namespace TeamGame.Puzzles
             base.PuzzleOver(Correct);
             this.Game.Components.Remove(this);
             Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player, true);
-
         }
-
     }
+
     public static class TeamCirclesInOrderHelper
     {
         public static byte nextToClick;
-    }
-
-    class mistakeAnimation : DrawableGameComponent
-    {
-        Texture2D spriteSheet;
-        Rectangle rect;
-        Vector2 position;
-        public mistakeAnimation(Game game, Vector2 position)
-            : base(game)
-        {
-            this.position = position;
-            spriteSheet = game.Content.Load<Texture2D>("art/incorrentCircles");
-        }
-        public override void  Update(GameTime gameTime)
-        {
- 	        
-        }
-        public override void  Draw(GameTime gameTime)
-        {
-            SpriteBatch spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
-            spriteBatch.Begin();
-            spriteBatch.Draw(spriteSheet, position, rect, Color.White);
-            spriteBatch.End();
-        }
     }
 }
