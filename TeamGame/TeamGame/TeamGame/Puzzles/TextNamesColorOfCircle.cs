@@ -75,7 +75,7 @@ namespace TeamGame.Puzzles
 
             spriteBatch.Draw(ballTexture, ballPosition, ((Player)ballColor+7).RealColor());
             String text = Enum.GetName(typeof(MyColor), textWord);
-            spriteBatch.DrawString(Game1.font, text, ballPosition.Center.ToVector2().Plus(0, 50), ((Player)textColor+7).RealColor(), 0, Game1.font.MeasureString(text)/2, 1.0f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(Game1.font, text, ballPosition.Center.ToVector2().Plus(0, 50), player==Game1.localPlayer?((Player)textColor+7).RealColor():player.ColorOf(), 0, Game1.font.MeasureString(text)/2, 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
 
             timesDisplayed += 1;

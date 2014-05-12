@@ -79,6 +79,8 @@ namespace TeamGame
         }
         public static string ColorName(this Player p)
         {
+            if (!individualColors)
+                p = (Player)p.TeamOf();
             //if (p.TeamOf() != Game1.localPlayer.TeamOf())
             //    return new String("Grey");
             switch (Enum.GetName(typeof(Player), p)[3])
