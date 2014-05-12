@@ -29,6 +29,10 @@ namespace TeamGame
         {
             return (Team) (Enum.GetName(typeof(Player), p)[1] - 48);
         }
+        public static Color ColorOf(this Team t)
+        {
+            return RealColor((Player)t);
+        }
         public static byte ID(this Player p)
         {
             return (byte) (Enum.GetName(typeof(Player), p)[3] - '0');
