@@ -26,10 +26,13 @@ namespace TeamGame.Puzzles
         byte buttonClicked = 255;
         bool correct = false;
 
+        Texture2D circleTexture;
+
         public TeamCirclesInOrder(Game game, Player player)
             : base(game, player)
         {
             TeamCirclesInOrderHelper.nextToClick = 1;
+            circleTexture = game.Content.Load<Texture2D>("art/circleAnimation");
         }
 
         public override void Initialize()
@@ -67,8 +70,8 @@ namespace TeamGame.Puzzles
             for (int i = 0; i < buttons.Count; i++)
             {
                 Vector2 position = buttonPos(buttons[i]);
-                spriteBatch.DrawString(Game1.font, "" + buttonText[i], position + new Vector2(16, 16), Color.White, 0, Game1.font.MeasureString("" + buttonText[i]) / 2, 1.0f, SpriteEffects.None, 0.5f);
-                spriteBatch.Draw(Game.Content.Load<Texture2D>("art/circleAnimation"), position, new Rectangle(0, 0, 36, 36), player.ColorOf());
+                spriteBatch.DrawString(Game1.font, "" + buttonText[i], position + new Vector2(18, 18), Color.White, 0, Game1.font.MeasureString("" + buttonText[i]) / 2, 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.Draw(circleTexture, position, new Rectangle(0, 0, 36, 36), player.ColorOf());
             }
             //spriteBatch.DrawString(Game1.font, " " +(buttonPos(buttons[0]) - (Mouse.GetState().Position() - new Vector2(16, 16))).LengthSquared(), Mouse.GetState().Position(), Color.White);
             spriteBatch.End();
@@ -83,6 +86,11 @@ namespace TeamGame.Puzzles
             if (TeamCirclesInOrderHelper.nextToClick > 20)
             {
                 PuzzleOver(true);
+                return;
+            }
+            else if (teamStatus <= 0)
+            {
+                PuzzleOver(false);
                 return;
             }
 
@@ -115,7 +123,7 @@ namespace TeamGame.Puzzles
                             buttonClicked = b; 
                             correct = false;
                         }
-                        spawnAnimation(buttonPos(b), correct);
+                        spawnAnimation(buttonPos(b), correct, player.ColorOf());
                         return;
                     }
                 }
@@ -145,7 +153,7 @@ namespace TeamGame.Puzzles
             buttonClicked = msg.ReadByte();
             if (buttonClicked != 255)
             {
-                spawnAnimation(buttonPos(buttonClicked), msg.ReadBoolean());
+                spawnAnimation(buttonPos(buttonClicked), msg.ReadBoolean(), player.ColorOf());
                 buttonClicked = 255;
             }
             
@@ -162,15 +170,17 @@ namespace TeamGame.Puzzles
                 buttonText.RemoveAt(0);
         }
 
-        private void spawnAnimation(Vector2 position, bool correct)
+        private void spawnAnimation(Vector2 position, bool correct, Color color)
         {
-            
+            if (!correct)
+                Game.Components.Add(new mistakeAnimation(this.Game, position));
         }
 
         public override void PuzzleOver(bool Correct)
         {
+            base.PuzzleOver(Correct);
             this.Game.Components.Remove(this);
-            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
+            Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player, true);
 
         }
 
@@ -180,12 +190,27 @@ namespace TeamGame.Puzzles
         public static byte nextToClick;
     }
 
-    public class mistakeAnimation : DrawableGameComponent
+    class mistakeAnimation : DrawableGameComponent
     {
+        Texture2D spriteSheet;
+        Rectangle rect;
+        Vector2 position;
         public mistakeAnimation(Game game, Vector2 position)
             : base(game)
         {
-
+            this.position = position;
+            spriteSheet = game.Content.Load<Texture2D>("art/incorrentCircles");
+        }
+        public override void  Update(GameTime gameTime)
+        {
+ 	        
+        }
+        public override void  Draw(GameTime gameTime)
+        {
+            SpriteBatch spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
+            spriteBatch.Begin();
+            spriteBatch.Draw(spriteSheet, position, rect, Color.White);
+            spriteBatch.End();
         }
     }
 }
