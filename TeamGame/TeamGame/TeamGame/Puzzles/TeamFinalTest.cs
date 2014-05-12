@@ -14,7 +14,9 @@ namespace TeamGame.Puzzles
         Rectangle testArea;
         Vector2 largeVelocity, smallVelocity, largePosition, smallPosition, averagePosition;
         int largeRadius = 134, smallRadius = 60;
+        int score, countUpdates;
         Texture2D largeTexture, smallTexture, averageTexture;
+        SpriteFont scoreFont;
 
         /// <summary>
         /// Final team puzzle. Welcome to the end.
@@ -42,6 +44,8 @@ namespace TeamGame.Puzzles
             largeTexture = Game.Content.Load<Texture2D>("art/bigCircle");
             smallTexture = Game.Content.Load<Texture2D>("art/smallCircle");
             averageTexture = Game.Content.Load<Texture2D>("art/averagePosition");
+            scoreFont = Game.Content.Load<SpriteFont>("ArmyHollow");
+
             PlayerExtensions.individualColors = false;
             System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
             System.Windows.Forms.Form winForm = ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Game.Window.Handle));
@@ -60,6 +64,7 @@ namespace TeamGame.Puzzles
             spriteBatch.Draw(largeTexture, largePosition, null, Color.White, 0, new Vector2(largeRadius, largeRadius), new Vector2(1), SpriteEffects.None, 0.5f);
             spriteBatch.Draw(smallTexture, smallPosition + largePosition, null, Color.White, 0, new Vector2(smallRadius, smallRadius), new Vector2(smallRadius/60), SpriteEffects.None, 0.5f);
             spriteBatch.Draw(averageTexture, averagePosition, player.TeamOf().ColorOf());
+            spriteBatch.DrawString(scoreFont, score.ToString(), Vector2.Zero, player.TeamOf().ColorOf());
             spriteBatch.End();
         }
 
@@ -75,6 +80,14 @@ namespace TeamGame.Puzzles
 
             if (player != Game1.localPlayer)
                 return;
+
+            if ((new Vector2(averagePosition.X - averageTexture.Width / 2, averagePosition.Y - averageTexture.Height / 2) - largePosition).LengthSquared() <= smallRadius * smallRadius)
+            {
+                if (countUpdates % 1 == 0)
+                {
+                    score++;
+                }
+            }
 
             largePosition += largeVelocity;
             #region BounceLargeCircle
@@ -101,8 +114,8 @@ namespace TeamGame.Puzzles
             #endregion
             
             Vector2 lastPosition = smallPosition.Plus(0,0);
-            smallPosition += smallVelocity;
-            #region BounceSmallCircle
+            //smallPosition += smallVelocity;
+            /*#region BounceSmallCircle
             if (smallPosition.LengthSquared() > largeRadius * largeRadius)
             {
                 Vector2 exit = 0.5f * (lastPosition + smallPosition);
@@ -111,8 +124,10 @@ namespace TeamGame.Puzzles
                 float projection = 2 * Vector2.Dot(exit, smallVelocity) / (largeRadius * largeRadius);
                 smallVelocity -= 2 * projection * exit;
             }
-            #endregion
-
+            #endregion */
+            if (countUpdates == int.MaxValue)
+                countUpdates = 0;
+            countUpdates++;
         }
 
         public new void PuzzleOver(bool p)
