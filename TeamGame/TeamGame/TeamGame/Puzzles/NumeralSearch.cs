@@ -25,7 +25,7 @@ namespace TeamGame.Puzzles
         bool previouslyClicked = false;
         TimeSpan timeToComplete;
 
-        ButtonPress leftClick;
+        LeftClick leftClick;
 
         SoundEffectInstance prompt;
 
@@ -41,7 +41,7 @@ namespace TeamGame.Puzzles
             for (int i = 0; i < amountToFind; i++)
                 nPosition.Add(Game1.random.Next(0, columns*rows));
 
-            leftClick = new ButtonPress(game, player);
+            leftClick = new LeftClick(game, player);
 
             timeToComplete = new TimeSpan(0, 0, 0, 0, (int) (40 / (double) Game1.gameDifficulty));
         }

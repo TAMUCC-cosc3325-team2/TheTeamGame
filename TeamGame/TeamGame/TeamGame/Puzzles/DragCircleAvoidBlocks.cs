@@ -37,7 +37,7 @@ namespace TeamGame.Puzzles
         Rectangle leftWall2, topWall2, bottomWall2, rightWall2, topPart2, bottomPart2;
         MouseState mouse, prevMouse;
 
-        ButtonPress leftClick;
+        LeftClick leftClick;
 
         public ClickedState ball1State
         {
@@ -90,7 +90,7 @@ namespace TeamGame.Puzzles
             block1State = block2State = BlockState.Waiting;
             ball1State = ball2State = ClickedState.Released;
 
-            leftClick = new ButtonPress(game, player);
+            leftClick = new LeftClick(game, player);
         }
 
         public override void Initialize()

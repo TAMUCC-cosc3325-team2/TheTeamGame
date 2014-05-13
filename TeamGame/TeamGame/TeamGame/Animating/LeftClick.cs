@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame
 {
-    public class ButtonPress : Animation
+    public class LeftClick : Animation
     {
-        public ButtonPress(Game game, Player player)
+        public LeftClick(Game game, Player player)
             : base(game, player, game.Content.Load<Texture2D>("art/buttonPulseSheet2"), 30, 30)
         {
             sEffect = game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();

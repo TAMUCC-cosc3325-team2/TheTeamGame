@@ -20,12 +20,12 @@ namespace TeamGame.Puzzles
 
         MouseState mouse, prevMouse;
 
-        ButtonPress leftClick;
+        LeftClick leftClick;
 
         public TextNamesColorOfCircle(Game game, Player player)
             : base(game, player)
         {
-            leftClick = new ButtonPress(game, player);
+            leftClick = new LeftClick(game, player);
         }
 
         public override void Initialize()

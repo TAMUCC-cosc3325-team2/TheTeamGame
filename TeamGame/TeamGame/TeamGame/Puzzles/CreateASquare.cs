@@ -36,7 +36,7 @@ namespace TeamGame.Puzzles
 
         Triangle tri1, tri2, tri3, tri4;
 
-        ButtonPress leftClick;
+        LeftClick leftClick;
 
         int randNum, countUpdates;
 
@@ -82,7 +82,7 @@ namespace TeamGame.Puzzles
             Triangles.Add(tri3);
             Triangles.Add(tri4);
 
-            leftClick = new ButtonPress(game, player);
+            leftClick = new LeftClick(game, player);
         }
 
         public override void Initialize()
