@@ -22,10 +22,10 @@ namespace TeamGame
         public Rectangle drawRegion;
         public Player player;
         public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
-        MouseState mouseState, prevMouseState;
 
-        SoundEffectInstance buttonBlip;
-        Animation buttonPress;
+        SoundEffectInstance buttonBlip, statusZero;
+
+        bool statusZeroPlayed;
 
 
         public Texture2D statusBarTexture;
@@ -39,6 +39,8 @@ namespace TeamGame
 
             buttonBlip = Game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
             buttonBlip.Volume = .5f;
+            statusZero = Game.Content.Load<SoundEffect>("audio/statusLow").CreateInstance();
+            statusZeroPlayed = false;
 
             game.Components.Add(this);
         }
@@ -49,9 +51,15 @@ namespace TeamGame
         public override void Update(GameTime gameTime) { throw new NotImplementedException(); }
         public virtual void Encode(NetOutgoingMessage msg) { throw new NotImplementedException(); }
         public virtual void Decode(NetIncomingMessage msg) { throw new NotImplementedException(); }
-        public virtual void PuzzleOver(bool Correct) {}
+        public virtual void PuzzleOver(bool Correct) { }
         public override void Draw(GameTime gameTime)
         {
+            if (Game1.pStates[player].status == 0 && !statusZeroPlayed)
+            {
+                statusZero.Play();
+                statusZeroPlayed = true;
+            }
+
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
@@ -69,7 +77,8 @@ namespace TeamGame
             { typeof(Puzzles.CreateASquare), 5},
             { typeof(Puzzles.MemorizeWhatYouSee), 6},
             { typeof(Puzzles.TeamCirclesInOrder), 10},
-            { typeof(Puzzles.TeamFinalTest), 15}
+            { typeof(Puzzles.TeamFinalTest), 15},
+            { typeof(Puzzles.AwaitingParticipants), 16}
             };
 
         /// <summary>

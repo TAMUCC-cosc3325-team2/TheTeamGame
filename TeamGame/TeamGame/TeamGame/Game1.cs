@@ -22,6 +22,8 @@ namespace TeamGame
         public static Player localPlayer = Player.None;
         public static Dictionary<Player, PlayerState> pStates;
         public static double gameDifficulty = 0.004;
+
+        public SoundEffectInstance backgroundSound;
         
         public static SpriteFont font;
         string windowTitle;
@@ -56,6 +58,8 @@ namespace TeamGame
         {
             
             font = Content.Load<SpriteFont>("ArmyHollow");
+            backgroundSound = Content.Load<SoundEffect>("audio/backgroundSound").CreateInstance();
+            backgroundSound.Volume = .75f;
         }
 
         /// <summary>
@@ -77,6 +81,8 @@ namespace TeamGame
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+            if (backgroundSound.State != SoundState.Playing)
+                backgroundSound.Play();
             windowTitle = "Total average bandwidth usage: " + Math.Round((net.client.Statistics.ReceivedBytes + net.client.Statistics.SentBytes) / gameTime.TotalGameTime.TotalMilliseconds, 3) + " kB/s";
             
 

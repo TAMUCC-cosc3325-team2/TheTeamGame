@@ -17,16 +17,21 @@ namespace TeamGame.Puzzles
         bool puzzleSuccess;
         Texture2D plusTexture, chevronTexture, fadeTexture;
         Vector2 displacement, chevronPosition;
-        int fadeAlpha = 0, fadeStep = 5; 
+        int fadeAlpha = 0, fadeStep = 5;
+        SoundEffectInstance statusIncrease;
 
         public Transition(Game game, Player player, bool puzzleSuccess)
             : base(game, player)
         {
             this.puzzleSuccess = puzzleSuccess;
             this.Visible = false;
+            statusIncrease = game.Content.Load<SoundEffect>("audio/statusIncrease").CreateInstance();
 
             if (puzzleSuccess)
+            {
                 ((Net)Game.Services.GetService(typeof(Net))).NotifyStatusIncrease();
+                statusIncrease.Play();
+            }
                 
         }
         public Transition(Game game, Player player)
@@ -103,7 +108,7 @@ namespace TeamGame.Puzzles
         public new void PuzzleOver(bool p)
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte)(Game1.random.Next(10,11));
+            byte randomPuzzle = (byte)(Game1.random.Next(2,6));
             Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
         }
 
