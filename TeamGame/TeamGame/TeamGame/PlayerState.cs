@@ -57,11 +57,10 @@ namespace TeamGame
             {
                 if (puzzle != null)
                     puzzle.Visible = true;
+                Game1.gameDifficulty += 0.00003;
                 cursorPosition = Mouse.GetState().Position(); // TODO: Mouse.SetPosition to centre of screen
-                if (this.status > 0)
-                    this.status -= Game1.gameDifficulty;
-                else
-                    this.status = 0;
+                this.status = MathHelper.Clamp((float) (this.status - Game1.gameDifficulty), 0, 12);
+
             }
 
             base.Update(gameTime);
@@ -79,6 +78,7 @@ namespace TeamGame
         {
             msg.Write((short)cursorPosition.X);
             msg.Write((short)cursorPosition.Y);
+            //msg.Write(Mouse.GetState().LeftButton.IsClicked());
             msg.Write((byte)status);
             if (puzzle != null)
             {
@@ -94,10 +94,11 @@ namespace TeamGame
             this.Visible = true;
             cursorPosition.X = msg.ReadInt16();
             cursorPosition.Y = msg.ReadInt16();
+            //if (msg.ReadBoolean())
             status = msg.ReadByte();
 
             byte remotePuzzleType = msg.ReadByte();
-            if (puzzle.ID() != remotePuzzleType)
+            if (puzzle.ID() != remotePuzzleType && remotePuzzleType != 0)
             {
                 if (puzzle != null)
                     Game.Components.Remove(puzzle);

@@ -6,93 +6,102 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Lidgren.Network;
+using Microsoft.Xna.Framework.Input;
 
 namespace TeamGame.Puzzles
 {
     class AwaitingParticipants : IPuzzle
     {
-
-        public Rectangle drawRegion;
-        public Player player;
-        public bool awaitingParticipants, t1p1, t1p2, t1p3, t1p4, t2p1, t2p2, t2p3, t2p4, t3p1, t3p2, t3p3, t3p4, t4p1, t4p2, t4p3, t4p4;
-        //public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
-
-        SoundEffectInstance buttonBlip, statusZero;
-
-        bool statusZeroPlayed;
-
-
-        public Texture2D awaitingPlayer;
+        Texture2D readyTexture, notReadyTexture;
+        Color[,] checkCollision;
+        bool participating = false;
+        bool ready = false;
+        bool clickedPrev = false;
 
         public AwaitingParticipants(Game game, Player player)
-            : base(game, player)
-        {
-            t1p1 = t1p2 = t1p3 = t1p4 = t2p1 = t2p2 = t2p3 = t2p4 = t3p1 = t3p2 = t3p3 = t3p4 = t4p1 = t4p2 = t4p3 = t4p4 = false;
-            awaitingParticipants = true;
-        }
-
-
-
+            : base(game, player){}
         public override void Initialize() 
         {
-            awaitingPlayer = Game.Content.Load<Texture2D>("art/awaitingPlayer");
+            notReadyTexture = Game.Content.Load<Texture2D>("art/participantNotReady");
+            readyTexture = Game.Content.Load<Texture2D>("art/participantReady");
+            checkCollision = new Color[readyTexture.Width, readyTexture.Height];
+            Color[] temp = new Color[readyTexture.Width * readyTexture.Height];
+            readyTexture.GetData(temp);
+            for (int i = 0; i < readyTexture.Width; i++)
+                for (int j = 0; j < readyTexture.Height; j++)
+                    checkCollision[i, j] = temp[i+ j*readyTexture.Width ];
         }
+
         public override void Update(GameTime gameTime) 
-        { 
-            foreach (Player p in Enum.GetValues(typeof(Player)))
+        {
+            if (!player.IsLocal())
+                return;
+
+            bool allReady = true;
+            participating = true;
+
+            foreach (PlayerState ps in Game1.pStates.Values)
             {
-                switch (p)
+                if (!(ps.puzzle is Puzzles.AwaitingParticipants))
                 {
-                    case Player.t1p1:
-                    case Player.t1p2:
-                    case Player.t1p3:
-                    case Player.t1p4:
-                    case Player.t2p1:
-                    case Player.t2p2:
-                    case Player.t2p3:
-                    case Player.t2p4:
-                    case Player.t3p1:
-                    case Player.t3p2:
-                    case Player.t3p3:
-                    case Player.t3p4:
-                    case Player.t4p1:
-                    case Player.t4p2:
-                    case Player.t4p3:
-                    case Player.t4p4:
-                    case Player.None:
-                        awaitingParticipants = true;
-                        break;
+                    allReady = true;
+                    break;
                 }
-
+                else if (((Puzzles.AwaitingParticipants)ps.puzzle).participating && !((Puzzles.AwaitingParticipants)ps.puzzle).ready)
+                    allReady = false;
             }
-            if (!awaitingParticipants)
-                PuzzleOver(true);
 
+            if (allReady)
+            {
+                PuzzleOver(player.IsLocal());
+                return;
+            }
+
+            
+            if (Mouse.GetState().LeftButton.IsClicked() && player.GetRegion().Contains(Mouse.GetState().Position()))
+            {
+                if (clickedPrev)
+                    return;
+                clickedPrev = true;
+
+                Vector2 mousePos = Mouse.GetState().Position() - player.GetRegion().Location.ToVector2();
+                if (checkCollision[(int) mousePos.X, (int) mousePos.Y].A > 0)
+                    ready = !ready; // toggle
+            }
+            else
+                clickedPrev = false;
         }
+
         public override void Encode(NetOutgoingMessage msg) 
-        { 
-
+        {
+            msg.Write(participating);
+            msg.Write(ready);
         }
+
         public override void Decode(NetIncomingMessage msg) 
-        { 
-
+        {
+            participating = msg.ReadBoolean();
+            ready = msg.ReadBoolean();
         }
+
         public override void PuzzleOver(bool Correct) 
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte)(Game1.random.Next(2, 6));
-            Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
+            if (Correct)
+                Game1.pStates[this.player].puzzle = new Puzzles.StartingGame(Game, player);
         }
+
         public override void Draw(GameTime gameTime)
         {
-            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            if (!participating)
+                return;
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null);
-            foreach (Player p in Enum.GetValues(typeof(Player)))
-                if(p != Player.None)
-                    spriteBatch.Draw(awaitingPlayer, p.GetRelativeRegion(), Color.White);
+            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            spriteBatch.Begin();
+            spriteBatch.Draw(Game.Content.Load<Texture2D>("art/playerBorder"), player.GetRegion().Location.ToVector2() + new Vector2(-4, -4), player.ColorOf());
+            spriteBatch.Draw(ready ? readyTexture : notReadyTexture, player.GetRegion(), player.ColorOf());
             spriteBatch.End();
-            base.Draw(gameTime);
+            
         }
     }
 }

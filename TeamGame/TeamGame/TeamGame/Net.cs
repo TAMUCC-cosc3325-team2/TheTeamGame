@@ -37,7 +37,8 @@ namespace TeamGame
 
             Game1.pStates = new Dictionary<Player, PlayerState>();
             foreach (Player p in Enum.GetValues(typeof(Player)))
-                Game1.pStates.Add(p, new PlayerState(this.Game, p));
+                if (p != Player.None)
+                    Game1.pStates.Add(p, new PlayerState(this.Game, p));
 
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
@@ -72,7 +73,7 @@ namespace TeamGame
         public override void Update(GameTime gameTime)
         {
             clock += gameTime.ElapsedGameTime;
-            if (client.ConnectionStatus == NetConnectionStatus.Connected && (clock.TotalMilliseconds > 10))
+            if (Game1.localPlayer != Player.None && client.ConnectionStatus == NetConnectionStatus.Connected && (clock.TotalMilliseconds > 10))
             {
                 SendState();
                 clock.Subtract(clock);

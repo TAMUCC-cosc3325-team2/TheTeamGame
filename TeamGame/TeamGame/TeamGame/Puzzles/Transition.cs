@@ -13,7 +13,7 @@ namespace TeamGame.Puzzles
     {
         public bool starting = false;
 
-        int countUpdates = 180;
+        public int countUpdates = 180;
         bool puzzleSuccess;
         Texture2D plusTexture, chevronTexture, fadeTexture;
         Vector2 displacement, chevronPosition;
@@ -24,7 +24,7 @@ namespace TeamGame.Puzzles
             : base(game, player)
         {
             this.puzzleSuccess = puzzleSuccess;
-            this.Visible = false;
+            
             statusIncrease = game.Content.Load<SoundEffect>("audio/statusIncrease").CreateInstance();
             statusIncrease.Volume = .5f;
 
@@ -116,11 +116,13 @@ namespace TeamGame.Puzzles
         public override void Encode(NetOutgoingMessage msg)
         {
             msg.Write(puzzleSuccess);
+            msg.Write(starting);
         }
 
         public override void Decode(NetIncomingMessage msg)
         {
             puzzleSuccess = msg.ReadBoolean();
+            starting = msg.ReadBoolean();
         }
     }
 }

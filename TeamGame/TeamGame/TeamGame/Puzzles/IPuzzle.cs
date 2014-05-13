@@ -51,7 +51,7 @@ namespace TeamGame
         public override void Update(GameTime gameTime) { throw new NotImplementedException(); }
         public virtual void Encode(NetOutgoingMessage msg) { throw new NotImplementedException(); }
         public virtual void Decode(NetIncomingMessage msg) { throw new NotImplementedException(); }
-        public virtual void PuzzleOver(bool Correct) { }
+        public virtual void PuzzleOver(bool Correct) {}
         public override void Draw(GameTime gameTime)
         {
             if (Game1.pStates[player].status == 0 && !statusZeroPlayed)
@@ -78,7 +78,8 @@ namespace TeamGame
             { typeof(Puzzles.MemorizeWhatYouSee), 6},
             { typeof(Puzzles.TeamCirclesInOrder), 10},
             { typeof(Puzzles.TeamFinalTest), 15},
-            { typeof(Puzzles.AwaitingParticipants), 16}
+            { typeof(Puzzles.AwaitingParticipants), 20},
+            { typeof(Puzzles.StartingGame), 21}
             };
 
         /// <summary>
@@ -88,6 +89,7 @@ namespace TeamGame
         /// <returns>0 if none, 1-255 if valid</returns>
         public static byte ID(this IPuzzle puzzle)
         {
+            byte b = map[puzzle.GetType()];
             return map[puzzle.GetType()];
         }
         public static IPuzzle CreateFromID(this byte puzzleID, Game game, Player player)
