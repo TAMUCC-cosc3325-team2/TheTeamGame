@@ -31,7 +31,7 @@ namespace TeamGame
         }
         public static Color ColorOf(this Team t)
         {
-            return RealColor((Player)t);
+            return RealColor(FromTeamAndID(t, 1));
         }
         public static byte ID(this Player p)
         {
@@ -49,9 +49,10 @@ namespace TeamGame
         /// <returns>One of RGBY</returns>
         public static Color RealColor(this Player p)
         {
+            int i = p.ID();
             if (!individualColors)
-                p = (Player)p.TeamOf();
-            switch (p.ID())
+                i = (int)p.TeamOf();
+            switch (i)
             {
                 case 1:
                     return Color.Red;
@@ -72,18 +73,19 @@ namespace TeamGame
         /// <returns>RGBY or Non-team color</returns>
         public static Color ColorOf(this Player p)
         {
-            if (p.TeamOf() != Game1.localPlayer.TeamOf())
+            if (individualColors && p.TeamOf() != Game1.localPlayer.TeamOf())
                 return Color.Beige;
             return p.RealColor();
             
         }
         public static string ColorName(this Player p)
         {
+            int i = p.ID();
             if (!individualColors)
-                p = (Player)p.TeamOf();
+                i = (int) p.TeamOf();
             //if (p.TeamOf() != Game1.localPlayer.TeamOf())
             //    return new String("Grey");
-            switch (Enum.GetName(typeof(Player), p)[3])
+            switch (i)
             {
                 case 1:
                     return "Red";
