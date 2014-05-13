@@ -26,6 +26,7 @@ namespace TeamGame.Puzzles
             this.puzzleSuccess = puzzleSuccess;
             this.Visible = false;
             statusIncrease = game.Content.Load<SoundEffect>("audio/statusIncrease").CreateInstance();
+            statusIncrease.Volume = .5f;
 
             if (puzzleSuccess)
             {
