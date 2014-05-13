@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame.Puzzles
 {
@@ -18,6 +19,10 @@ namespace TeamGame.Puzzles
         Texture2D largeTexture, smallTexture, averageTexture;
         SpriteFont scoreFont;
         Vector2 largeDirection, smallDirection;
+
+        MouseState mouse, prevMouse;
+
+        SoundEffectInstance blip;
 
         /// <summary>
         /// Final team puzzle. Welcome to the end.
@@ -57,7 +62,6 @@ namespace TeamGame.Puzzles
 
             smallRadius = circleSmall.Width / 2 + 10;
             largeRadius = circleLarge.Width / 2;
-
         }
 
         public override void Initialize()
@@ -66,6 +70,8 @@ namespace TeamGame.Puzzles
             smallTexture = Game.Content.Load<Texture2D>("art/smallCircle");
             averageTexture = Game.Content.Load<Texture2D>("art/averagePosition");
             scoreFont = Game.Content.Load<SpriteFont>("ArmyHollow");
+            blip = Game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
+            blip.Volume = .5f;
 
             //PlayerExtensions.individualColors = false;
             System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
@@ -105,6 +111,11 @@ namespace TeamGame.Puzzles
             if (player != Game1.localPlayer)
                 return;
 
+            mouse = Mouse.GetState();
+            if (mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+                blip.Play();
+
+            #region increase score
             if ((new Vector2(averagePosition.X - averageTexture.Width / 2, averagePosition.Y - averageTexture.Height / 2) - new Vector2(circleSmall.Center.X, circleSmall.Center.Y)).LengthSquared() <= (smallRadius * smallRadius))
             {
                 if (countUpdates % 1 == 0)
@@ -126,6 +137,7 @@ namespace TeamGame.Puzzles
                     }
                 }
             }
+            #endregion
 
             #region bounce large circle
             //if the large circle collides with the top or bottom of the test area,
@@ -174,6 +186,7 @@ namespace TeamGame.Puzzles
 
             if (countUpdates == int.MaxValue)
                 countUpdates = 1;
+            prevMouse = mouse;
             countUpdates++;
         }
 
@@ -184,6 +197,7 @@ namespace TeamGame.Puzzles
 
         public override void Encode(NetOutgoingMessage msg)
         {
+            /* not necessary yet
             msg.Write((int)circleLarge.X);
             msg.Write((int)circleLarge.Y);
             msg.Write((int)circleSmall.X);
@@ -193,11 +207,12 @@ namespace TeamGame.Puzzles
             msg.Write((int)score3);
             msg.Write((int)score4);
             msg.Write((int)averagePosition.X);
-            msg.Write((int)averagePosition.Y);
+            msg.Write((int)averagePosition.Y); */
         }
 
         public override void Decode(NetIncomingMessage msg)
         {
+            /* not necessary yet
             circleLarge.X = msg.ReadInt32();
             circleLarge.Y = msg.ReadInt32();
             circleSmall.X = msg.ReadInt32();
@@ -207,7 +222,7 @@ namespace TeamGame.Puzzles
             score3 = msg.ReadInt32();
             score4 = msg.ReadInt32();
             averagePosition.X = msg.ReadInt32();
-            averagePosition.Y = msg.ReadInt32();
+            averagePosition.Y = msg.ReadInt32();*/
         }
     }
 }

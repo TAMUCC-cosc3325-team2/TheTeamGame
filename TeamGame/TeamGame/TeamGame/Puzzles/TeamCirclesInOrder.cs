@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame.Puzzles
 {
@@ -26,6 +27,7 @@ namespace TeamGame.Puzzles
         byte buttonClicked = 255;
         bool correct = false;
 
+        SoundEffectInstance blip;
         Animation buttonCorrect, buttonIncorrect;
 
         Texture2D circleTexture, circleIncorrect;
@@ -36,6 +38,9 @@ namespace TeamGame.Puzzles
             TeamCirclesInOrderHelper.nextToClick = 1;
             circleTexture = game.Content.Load<Texture2D>("art/circleAnimation");
             circleIncorrect = game.Content.Load<Texture2D>("art/buttonIncorrect");
+            blip = game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
+            blip.Volume = .5f;
+
             buttonCorrect = new Animation(Game, player, circleTexture, 36, 36);
             buttonIncorrect = new Animation(Game, player, circleIncorrect, 48, 48);
         }
@@ -80,6 +85,7 @@ namespace TeamGame.Puzzles
             }
             //spriteBatch.DrawString(Game1.font, " " +(buttonPos(buttons[0]) - (Mouse.GetState().Position() - new Vector2(16, 16))).LengthSquared(), Mouse.GetState().Position(), Color.White);
             spriteBatch.End();
+
         }
 
         public override void Update(GameTime gameTime)
@@ -178,6 +184,7 @@ namespace TeamGame.Puzzles
         {
             buttonCorrect.pos = position;
             buttonIncorrect.pos = position;
+            blip.Play();
             if (correct)
                 buttonCorrect.AnimationStat = Status.Playing;
             else

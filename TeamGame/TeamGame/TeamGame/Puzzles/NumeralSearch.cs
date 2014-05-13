@@ -24,8 +24,6 @@ namespace TeamGame.Puzzles
         HashSet<int> nPosition; // where amountToFind in columns*rows the sixes or nines are hiding
         bool previouslyClicked = false;
         TimeSpan timeToComplete;
-        
-        Animation buttonPress;
 
         SoundEffectInstance prompt;
 
@@ -49,9 +47,6 @@ namespace TeamGame.Puzzles
             sixTexture = Game.Content.Load<Texture2D>("art/six");
             nineTexture = Game.Content.Load<Texture2D>("art/nine");
 
-            buttonPress = new Animation(Game, player, Game.Content.Load<Texture2D>("art/buttonPulseSheet"), 30, 30);
-            buttonPress.numButtonPressPlays = 1;
-
             if (player == Game1.localPlayer)
             {
                 prompt = Game.Content.Load<SoundEffect>(findSixes ? "audio/FindAllSixes" : "audio/FindAllNines").CreateInstance();
@@ -61,7 +56,6 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime); // draw healthbar
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             
@@ -71,14 +65,15 @@ namespace TeamGame.Puzzles
             foreach (int i in nPosition)
                 spriteBatch.Draw(findSixes?sixTexture:nineTexture, offset.Plus((i % columns) * width, (int) (i / columns) * height), Color.White);
             spriteBatch.End();
-            buttonPress.Draw(gameTime);
+
+            base.Draw(gameTime); // draw healthbar
         }
 
         public override void Update(GameTime gameTime)
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-
+            base.Update(gameTime);
             if (nPosition.Count == 0) // all have been found
                 PuzzleOver(true);
             
@@ -88,8 +83,6 @@ namespace TeamGame.Puzzles
 
             if (Mouse.GetState().LeftButton.IsClicked())
             {
-                buttonPress.AnimationStat = Status.Playing;
-                buttonPress.pos = Mouse.GetState().Position();
                 if (previouslyClicked)
                     return;
                 previouslyClicked = true;
@@ -112,9 +105,6 @@ namespace TeamGame.Puzzles
             }
             else
                 previouslyClicked = false;
-
-
-            base.Update(gameTime);
         }
 
         public new void PuzzleOver(bool p)

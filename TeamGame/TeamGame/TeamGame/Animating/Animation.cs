@@ -44,6 +44,7 @@ namespace TeamGame
             textureSheet = texture;
             frameWidth = width;
             frameHeight = height;
+            numButtonPressPlays = 1;
 
             AnimationStat = Status.Waiting;
 

@@ -97,14 +97,14 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime); // draw healthbar
-
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             foreach (Triangle tri in Triangles)
                 spriteBatch.Draw(triangle, tri.Location.Location.ToVector2(), null, player.ColorOf(), MathHelper.ToRadians(tri.Degrees),
                                  new Vector2(tri.Location.Width/2, tri.Location.Height), 1.0f, SpriteEffects.None, 0f);
             spriteBatch.End();
+
+            base.Draw(gameTime); // draw healthbar
         }
 
         public override void Update(GameTime gameTime)
@@ -112,6 +112,8 @@ namespace TeamGame.Puzzles
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
             countUpdates++;
+
+            base.Update(gameTime);
 
             mouse = Mouse.GetState();
 

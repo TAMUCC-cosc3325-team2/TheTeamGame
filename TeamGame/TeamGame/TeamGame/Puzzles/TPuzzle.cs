@@ -11,6 +11,7 @@ namespace TeamGame.Puzzles
     {
         public double teamStatus;
         Texture2D teamStatusTexture;
+
         public TPuzzle(Game game, Player player)
             : base(game, player)
         {
@@ -25,6 +26,7 @@ namespace TeamGame.Puzzles
         {
             if (player.ID() != Game1.localPlayer.ID()) // no need to draw four times per team
                 return;
+
             teamStatus = 0;
             foreach (Player p in player.TeamList())
                 teamStatus += Game1.pStates[p].status;
@@ -49,7 +51,6 @@ namespace TeamGame.Puzzles
             spriteBatch.Begin();
             spriteBatch.Draw(teamStatusTexture, player.TeamOf().GetRegion().Location.ToVector2().Plus(108, 342), new Rectangle(12 * (int)(24 - teamStatus), 0, 288, 12), Color.PaleTurquoise);
             spriteBatch.End();
-
         }
 
 

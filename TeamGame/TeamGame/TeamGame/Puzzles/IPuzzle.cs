@@ -24,7 +24,9 @@ namespace TeamGame
         public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
         MouseState mouseState, prevMouseState;
 
-        SoundEffect buttonPress;
+        SoundEffectInstance buttonBlip;
+        Animation buttonPress;
+
 
         public Texture2D statusBarTexture;
 
@@ -35,7 +37,10 @@ namespace TeamGame
             this.player = player;
             statusBarTexture = game.Content.Load<Texture2D>("art/statusBar");
 
-            buttonPress = Game.Content.Load<SoundEffect>("audio/buttonBeep");
+            buttonBlip = Game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
+            buttonBlip.Volume = .5f;
+
+            buttonPress = new Animation(Game, player, Game.Content.Load<Texture2D>("art/buttonPulseSheet"), 30, 30);
 
             game.Components.Add(this);
         }
@@ -49,9 +54,10 @@ namespace TeamGame
 
             if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
             {
-                buttonPress.CreateInstance();
+                buttonBlip.Play();
+                buttonPress.AnimationStat = Status.Playing;
+                buttonPress.pos = Mouse.GetState().Position();
             }
-
             prevMouseState = mouseState;
         }
         public virtual void Encode(NetOutgoingMessage msg) { throw new NotImplementedException(); }
@@ -63,10 +69,9 @@ namespace TeamGame
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             spriteBatch.Draw(statusBarTexture, new Vector2(53, 163), new Rectangle(12 * (int) (12 - Game1.pStates[player].status), 0, 144, 12), player.ColorOf());
+            buttonPress.Draw(gameTime);
             spriteBatch.End();
         }
-
-
     }
     public static class IPuzzleHelper
     {

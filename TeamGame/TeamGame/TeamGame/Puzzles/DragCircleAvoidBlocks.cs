@@ -108,8 +108,6 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             spriteBatch.Draw(background, backgroundRec, player.ColorOf());
@@ -118,13 +116,15 @@ namespace TeamGame.Puzzles
             spriteBatch.Draw(ball, ball1Rec, player.ColorOf());
             spriteBatch.Draw(ball, ball2Rec, player.ColorOf());
             spriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         public override void Update(GameTime gameTime)
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-
+            base.Update(gameTime);
             mouse = Mouse.GetState();
 
             Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2());

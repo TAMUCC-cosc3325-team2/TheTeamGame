@@ -40,7 +40,7 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-
+            base.Update(gameTime);
             if (timesDisplayed > 60)
             {
                 ballColor = (MyColor)((Game1.random.Next(1, 4) + (int)ballColor) % 4);
@@ -65,8 +65,6 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime); // draw healthbar
-
             if (textColor == ballColor) // not yet updated so don't draw that first frame
                 return;
 
@@ -77,6 +75,7 @@ namespace TeamGame.Puzzles
             String text = Enum.GetName(typeof(MyColor), textWord);
             spriteBatch.DrawString(Game1.font, text, ballPosition.Center.ToVector2().Plus(0, 50), player==Game1.localPlayer?((Player)textColor+7).RealColor():player.ColorOf(), 0, Game1.font.MeasureString(text)/2, 1.0f, SpriteEffects.None, 0.5f);
             spriteBatch.End();
+            base.Draw(gameTime); // draw healthbar
 
             timesDisplayed += 1;
         }

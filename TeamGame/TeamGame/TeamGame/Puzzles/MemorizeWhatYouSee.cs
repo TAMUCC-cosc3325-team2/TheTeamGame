@@ -77,8 +77,6 @@ namespace TeamGame.Puzzles
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             
             spriteBatch.Begin();
@@ -95,6 +93,8 @@ namespace TeamGame.Puzzles
             //}
 
             spriteBatch.End();
+
+            base.Draw(gameTime);
         }
     }
 
