@@ -35,7 +35,9 @@ namespace TeamGame.Puzzles
         Rectangle goalRec;
         Rectangle leftWall1, topWall1, bottomWall1, rightWall1, topPart1, bottomPart1;
         Rectangle leftWall2, topWall2, bottomWall2, rightWall2, topPart2, bottomPart2;
-        MouseState mouse;
+        MouseState mouse, prevMouse;
+
+        ButtonPress leftClick;
 
         public ClickedState ball1State
         {
@@ -87,6 +89,8 @@ namespace TeamGame.Puzzles
             
             block1State = block2State = BlockState.Waiting;
             ball1State = ball2State = ClickedState.Released;
+
+            leftClick = new ButtonPress(game, player);
         }
 
         public override void Initialize()
@@ -124,8 +128,10 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-            base.Update(gameTime);
+
             mouse = Mouse.GetState();
+            if (mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+                leftClick.Play(gameTime, mouse.Position());
 
             Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2());
 
@@ -286,7 +292,7 @@ namespace TeamGame.Puzzles
 
             if ((ball1Rec.Center.ToVector2() - goalRec.Center.ToVector2()).LengthSquared() <= 11)
                 PuzzleOver(true);
-
+            prevMouse = mouse;
         }
 
         public new void PuzzleOver(bool p)

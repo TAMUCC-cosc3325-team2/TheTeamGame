@@ -25,6 +25,8 @@ namespace TeamGame.Puzzles
         bool previouslyClicked = false;
         TimeSpan timeToComplete;
 
+        ButtonPress leftClick;
+
         SoundEffectInstance prompt;
 
         /// <summary>
@@ -38,6 +40,8 @@ namespace TeamGame.Puzzles
             nPosition = new HashSet<int>();
             for (int i = 0; i < amountToFind; i++)
                 nPosition.Add(Game1.random.Next(0, columns*rows));
+
+            leftClick = new ButtonPress(game, player);
 
             timeToComplete = new TimeSpan(0, 0, 0, 0, (int) (40 / (double) Game1.gameDifficulty));
         }
@@ -73,7 +77,7 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-            base.Update(gameTime);
+
             if (nPosition.Count == 0) // all have been found
                 PuzzleOver(true);
             
@@ -86,6 +90,8 @@ namespace TeamGame.Puzzles
                 if (previouslyClicked)
                     return;
                 previouslyClicked = true;
+
+                leftClick.Play(gameTime, Mouse.GetState().Position());
 
                 Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2() + offset);
 

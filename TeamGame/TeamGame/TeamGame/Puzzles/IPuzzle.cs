@@ -40,26 +40,13 @@ namespace TeamGame
             buttonBlip = Game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
             buttonBlip.Volume = .5f;
 
-            buttonPress = new Animation(Game, player, Game.Content.Load<Texture2D>("art/buttonPulseSheet"), 30, 30);
-
             game.Components.Add(this);
         }
 
         
 
         public override void Initialize() {}
-        public override void Update(GameTime gameTime) 
-        {
-            mouseState = Mouse.GetState();
-
-            if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
-            {
-                buttonBlip.Play();
-                buttonPress.AnimationStat = Status.Playing;
-                buttonPress.pos = Mouse.GetState().Position();
-            }
-            prevMouseState = mouseState;
-        }
+        public override void Update(GameTime gameTime) { throw new NotImplementedException(); }
         public virtual void Encode(NetOutgoingMessage msg) { throw new NotImplementedException(); }
         public virtual void Decode(NetIncomingMessage msg) { throw new NotImplementedException(); }
         public virtual void PuzzleOver(bool Correct) {}
@@ -69,7 +56,6 @@ namespace TeamGame
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
             spriteBatch.Draw(statusBarTexture, new Vector2(53, 163), new Rectangle(12 * (int) (12 - Game1.pStates[player].status), 0, 144, 12), player.ColorOf());
-            buttonPress.Draw(gameTime);
             spriteBatch.End();
         }
     }

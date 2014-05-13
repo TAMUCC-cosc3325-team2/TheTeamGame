@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TeamGame
 {
@@ -17,6 +18,8 @@ namespace TeamGame
         public int frame;
         public Vector2 pos;
         public float scale;
+        public bool hasSoundEffect;
+        public SoundEffectInstance sEffect;
 
         public int numButtonPressPlays;
 
@@ -56,6 +59,10 @@ namespace TeamGame
         { 
             if(AnimationStat == Status.Playing)
             {
+                if (hasSoundEffect && sEffect.State != SoundState.Playing)
+                {
+                    sEffect.Play();
+                }
                 if (frame < 0)
                     frame++;
                 frame++;

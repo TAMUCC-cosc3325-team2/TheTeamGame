@@ -36,6 +36,7 @@ namespace TeamGame.Puzzles
 
         Triangle tri1, tri2, tri3, tri4;
 
+        ButtonPress leftClick;
 
         int randNum, countUpdates;
 
@@ -80,6 +81,8 @@ namespace TeamGame.Puzzles
             Triangles.Add(tri2);
             Triangles.Add(tri3);
             Triangles.Add(tri4);
+
+            leftClick = new ButtonPress(game, player);
         }
 
         public override void Initialize()
@@ -113,16 +116,17 @@ namespace TeamGame.Puzzles
                 return; // this puzzle only updates by its owner
             countUpdates++;
 
-            base.Update(gameTime);
-
             mouse = Mouse.GetState();
 
             Vector2 relativePos = Mouse.GetState().Position() - (drawRegion.Location.ToVector2());
 
-            if (mouse.LeftButton.IsClicked() && prevMouse.LeftButton.IsClicked())
+            if (mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+            {
+                leftClick.Play(gameTime, mouse.Position());
                 foreach (Triangle tri in Triangles)
                     if (tri.Contains(relativePos) && tri.Stat == Status.Waiting)
                         tri.Stat = Status.Rotating;
+            }
 
             foreach (Triangle tri in Triangles)
             {

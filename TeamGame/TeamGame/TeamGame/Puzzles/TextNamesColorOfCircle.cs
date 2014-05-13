@@ -18,10 +18,14 @@ namespace TeamGame.Puzzles
         Texture2D ballTexture; // 50x50
         SoundEffectInstance textNames;
 
+        MouseState mouse, prevMouse;
+
+        ButtonPress leftClick;
+
         public TextNamesColorOfCircle(Game game, Player player)
             : base(game, player)
         {
-
+            leftClick = new ButtonPress(game, player);
         }
 
         public override void Initialize()
@@ -40,7 +44,6 @@ namespace TeamGame.Puzzles
         {
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
-            base.Update(gameTime);
             if (timesDisplayed > 60)
             {
                 ballColor = (MyColor)((Game1.random.Next(1, 4) + (int)ballColor) % 4);
@@ -53,7 +56,11 @@ namespace TeamGame.Puzzles
                 timesDisplayed = 0;
                 return;
             }
-            MouseState mouse = Mouse.GetState();
+            mouse = Mouse.GetState();
+
+            if (mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
+                leftClick.Play(gameTime, mouse.Position());
+
             if (mouse.LeftButton.IsClicked() && ballPosition.Contains(mouse.PPosition()))
             {
                 if (ballColor == textWord)
@@ -61,6 +68,7 @@ namespace TeamGame.Puzzles
                 else
                     PuzzleOver(false);
             }
+            prevMouse = mouse;
         }
 
         public override void Draw(GameTime gameTime)
