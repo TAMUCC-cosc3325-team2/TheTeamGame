@@ -113,8 +113,8 @@ namespace TeamGame.Puzzles
             else
                 previouslyClicked = false;
 
-            
-            
+
+            base.Update(gameTime);
         }
 
         public new void PuzzleOver(bool p)

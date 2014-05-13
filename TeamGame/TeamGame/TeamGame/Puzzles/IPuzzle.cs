@@ -22,6 +22,9 @@ namespace TeamGame
         public Rectangle drawRegion;
         public Player player;
         public Matrix matrix { get { return Matrix.CreateTranslation(drawRegion.Location.X, drawRegion.Location.Y, 0); } }
+        MouseState mouseState, prevMouseState;
+
+        SoundEffect buttonPress;
 
         public Texture2D statusBarTexture;
 
@@ -32,13 +35,25 @@ namespace TeamGame
             this.player = player;
             statusBarTexture = game.Content.Load<Texture2D>("art/statusBar");
 
+            buttonPress = Game.Content.Load<SoundEffect>("audio/buttonBeep");
+
             game.Components.Add(this);
         }
 
         
 
         public override void Initialize() {}
-        public override void Update(GameTime gameTime) { throw new NotImplementedException(); }
+        public override void Update(GameTime gameTime) 
+        {
+            mouseState = Mouse.GetState();
+
+            if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+            {
+                buttonPress.CreateInstance();
+            }
+
+            prevMouseState = mouseState;
+        }
         public virtual void Encode(NetOutgoingMessage msg) { throw new NotImplementedException(); }
         public virtual void Decode(NetIncomingMessage msg) { throw new NotImplementedException(); }
         public virtual void PuzzleOver(bool Correct) {}
