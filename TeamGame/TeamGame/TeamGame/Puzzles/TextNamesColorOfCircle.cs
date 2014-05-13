@@ -12,6 +12,7 @@ namespace TeamGame.Puzzles
     class TextNamesColorOfCircle : IPuzzle
     {
         byte timesDisplayed = 61;
+        int numberMissed = 0;
         Rectangle ballPosition;
 
         MyColor ballColor, textColor, textWord;
@@ -54,8 +55,13 @@ namespace TeamGame.Puzzles
                 if (textWord == textColor && Game1.random.Next(2) == 1)
                     textWord = ballColor;
                 timesDisplayed = 0;
+                if (ballColor == textWord)
+                    numberMissed++;
+                if (numberMissed > 2)
+                    PuzzleOver(false);
                 return;
             }
+
             mouse = Mouse.GetState();
 
             if (mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
