@@ -22,6 +22,7 @@ namespace TeamGame
         public IPuzzle puzzle;
         public Player player;
         public double status;
+        public int score;
 
         public PlayerState(Game game, Player player)
             : base(game)

@@ -115,7 +115,10 @@ namespace TeamGame
                     winForm.Cursor = myCursor;
                 }
                 else if (msg.SequenceChannel == 31) // notified of status increase
-                    Game1.pStates[(Player) msg.ReadByte()].status = 12;
+                {
+                    Game1.pStates[(Player)msg.ReadByte()].status = 12;
+                    Game1.pStates[(Player)msg.ReadByte()].score += 100;
+                }
             }
             else
                 Game1.pStates[fromPlayer].Decode(msg);
