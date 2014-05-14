@@ -20,7 +20,7 @@ namespace TeamGame.Puzzles
         Texture2D largeTexture, smallTexture, averageTexture;
         SpriteFont scoreFont;
         Vector2 largeDirection, smallDirection;
-        float scale = 1;
+        float scale = .9f;
         int score;
 
         MouseState mouse, prevMouse;

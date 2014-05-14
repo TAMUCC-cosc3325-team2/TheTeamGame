@@ -58,13 +58,16 @@ namespace TeamGame.Puzzles
 
             foreach (PlayerState ps in Game1.pStates.Values)
             {
-                if (!(ps.puzzle is Puzzles.AwaitingParticipants && !(ps.puzzle is Puzzles.TeamFinalTest)))
+                if (!(ps.puzzle is Puzzles.AwaitingParticipants) && !(ps.puzzle is Puzzles.TeamFinalTest))
                 {
                     allReady = true;
                     break;
                 }
                 else if (((Puzzles.AwaitingParticipants)ps.puzzle).participating && !((Puzzles.AwaitingParticipants)ps.puzzle).ready)
+                {
                     allReady = false;
+                    break;
+                }
             }
 
             if (allReady)
