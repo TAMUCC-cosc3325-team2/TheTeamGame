@@ -24,8 +24,7 @@ namespace TeamGame.Puzzles
         Shape correct;
         SoundEffectInstance memorizeIntro, memorizePrompt;
         Boolean prompt;
-        //Random random = new Random();
-
+        
         public MemorizeWhatYouSee(Game game, Player player)
             : base(game, player)
         {
@@ -93,8 +92,8 @@ namespace TeamGame.Puzzles
             if (player != Game1.localPlayer)
                 return; // this puzzle only updates by its owner
 
-            //after 5 seconds, player can select color
-            if (stopWatch.ElapsedMilliseconds > 7000)
+            //after 3 seconds, player can select a color
+            if (stopWatch.ElapsedMilliseconds > 3000)
             {
                 if (prompt)
                 {
@@ -106,21 +105,52 @@ namespace TeamGame.Puzzles
                 if (mouse.LeftButton == ButtonState.Pressed)
                 {
                     if (new Rectangle(drawRegion.Center.X - 100, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
+                    {
                         selected = Color.Red;
-                    if (new Rectangle(drawRegion.Center.X - 50, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
-                        selected = Color.Green;
-                    if (new Rectangle(drawRegion.Center.X, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
-                        selected = Color.Blue;
-                    if (new Rectangle(drawRegion.Center.X + 50, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
-                        selected = Color.Yellow;
-
-                    if (selected == correct.color)
-                    {
-                        PuzzleOver(true);
+                        if (selected == correct.color)
+                        {
+                            PuzzleOver(true);
+                        }
+                        else
+                        {
+                            PuzzleOver(false);
+                        }
                     }
-                    else
+                    if (new Rectangle(drawRegion.Center.X - 50, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
                     {
-                        PuzzleOver(false);
+                        selected = Color.Green;
+                        if (selected == correct.color)
+                        {
+                            PuzzleOver(true);
+                        }
+                        else
+                        {
+                            PuzzleOver(false);
+                        }
+                    }
+                    if (new Rectangle(drawRegion.Center.X, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
+                    {
+                        selected = Color.Blue;
+                        if (selected == correct.color)
+                        {
+                            PuzzleOver(true);
+                        }
+                        else
+                        {
+                            PuzzleOver(false);
+                        }
+                    }
+                    if (new Rectangle(drawRegion.Center.X + 50, drawRegion.Center.Y + 13, 50, 50).Contains(mouse.Position()))
+                    {
+                        selected = Color.Yellow;
+                        if (selected == correct.color)
+                        {
+                            PuzzleOver(true);
+                        }
+                        else
+                        {
+                            PuzzleOver(false);
+                        }
                     }
                 }
             }
@@ -132,15 +162,15 @@ namespace TeamGame.Puzzles
             
             //show shapes
             spriteBatch.Begin();
-            if (stopWatch.ElapsedMilliseconds < 7000)
+            if (stopWatch.ElapsedMilliseconds < 3000)
             {
                 for (int i = 0; i < 4; i++)
                 {
                     spriteBatch.Draw(options[i].texture, options[i].position, options[i].color);
                 }
             }
-            //after 5 seconds, show question
-            if (stopWatch.ElapsedMilliseconds > 7000)
+            //after 3 seconds, show question
+            if (stopWatch.ElapsedMilliseconds > 3000)
             {
                 //show shape
                 spriteBatch.Draw(correct.texture, new Rectangle(drawRegion.Center.X - 25, drawRegion.Center.Y - 63, 50, 50), Color.White);
@@ -158,18 +188,12 @@ namespace TeamGame.Puzzles
 
         public override void Encode(Lidgren.Network.NetOutgoingMessage msg)
         {
-            //msg.Write((byte)timesDisplayed);
-            //msg.Write((byte)ballColor);
-            //msg.Write((byte)textColor);
-            //msg.Write((byte)textWord);
+                      
         }
 
         public override void Decode(Lidgren.Network.NetIncomingMessage msg)
         {
-            //timesDisplayed = msg.ReadByte();
-            //ballColor = (MyColor)msg.ReadByte();
-            //textColor = (MyColor)msg.ReadByte();
-            //textWord = (MyColor)msg.ReadByte();
+
         }
 
         public override void PuzzleOver(bool p)
