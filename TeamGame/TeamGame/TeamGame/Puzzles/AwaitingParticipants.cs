@@ -18,11 +18,24 @@ namespace TeamGame.Puzzles
         bool ready = false;
         bool clickedPrev = false;
         SoundEffectInstance readySound, unreadySound;
+        int score = 0;
+        SpriteFont font;
 
         public AwaitingParticipants(Game game, Player player)
-            : base(game, player){}
+            : base(game, player) { }
+        public AwaitingParticipants(Game game, Player player, int score)
+            : base(game, player)
+        {
+            this.score = score;
+            PlayerExtensions.individualColors = true;
+            PlayerExtensions.rotations += 1;
+            System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
+            System.Windows.Forms.Form winForm = ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Game.Window.Handle));
+            winForm.Cursor = myCursor;
+        }
         public override void Initialize() 
         {
+            font = Game.Content.Load<SpriteFont>("BigFont");
             readySound = Game.Content.Load<SoundEffect>("audio/BeepHigh").CreateInstance();
             unreadySound = Game.Content.Load<SoundEffect>("audio/BeepLow").CreateInstance();
             notReadyTexture = Game.Content.Load<Texture2D>("art/participantNotReady");
@@ -109,6 +122,15 @@ namespace TeamGame.Puzzles
             spriteBatch.Begin();
             spriteBatch.Draw(Game.Content.Load<Texture2D>("art/playerBorder"), player.GetRegion().Location.ToVector2() + new Vector2(-4, -4), player.ColorOf());
             spriteBatch.Draw(ready ? readyTexture : notReadyTexture, player.GetRegion(), player.ColorOf());
+            if (this.score > 0)
+            {
+                String ts = Puzzles.TeamFinalTest.teamScores[player.TeamOf()].ToString();
+                spriteBatch.DrawString(Game1.font, score.ToString(), player.GetRegion().Center.ToVector2().Plus((int)-Game1.font.MeasureString(score.ToString()).X / 2, (int)50), player.ColorOf());
+                Rectangle region = player.TeamOf().GetRegion();
+                Vector2 point = region.Center.ToVector2();
+                point += new Vector2(-font.MeasureString(ts).X / 2, -font.MeasureString(ts).Y / 2);
+                spriteBatch.DrawString(font, ts, player.TeamOf().GetRegion().Center.ToVector2().Plus((int) -font.MeasureString(ts).X/2, (int) -font.MeasureString(ts).Y/2), player.TeamOf().ColorOf());
+            }
             spriteBatch.End();
             
         }

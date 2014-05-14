@@ -44,8 +44,8 @@ namespace TeamGame
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
                 {
-                    Game1.pStates[p].puzzle = new Puzzles.Transition(Game, p);
-                    ((Puzzles.Transition)Game1.pStates[p].puzzle).starting = true;
+                    Game1.pStates[p].puzzle = new Puzzles.AwaitingParticipants(Game, p);
+                    //((Puzzles.Transition)Game1.pStates[p].puzzle).starting = true;
                 }
 
         }

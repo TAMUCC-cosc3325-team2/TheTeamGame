@@ -31,6 +31,8 @@ namespace TeamGame
         }
         public static Color ColorOf(this Team t)
         {
+            if (individualColors)
+                return RealColor(FromTeamAndID(Team.t1, (int)t));
             return RealColor(FromTeamAndID(t, 1));
         }
         public static byte ID(this Player p)

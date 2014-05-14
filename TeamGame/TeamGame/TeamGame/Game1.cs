@@ -36,6 +36,7 @@ namespace TeamGame
             graphics.PreferredBackBufferHeight = 724;
             Content.RootDirectory = "Content";
             windowTitle = "";
+            Window.Title = "Team Game";
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace TeamGame
                 this.Exit();
             if (backgroundSound.State != SoundState.Playing)
                 backgroundSound.Play();
-            windowTitle = "Total average bandwidth usage: " + Math.Round((net.client.Statistics.ReceivedBytes + net.client.Statistics.SentBytes) / gameTime.TotalGameTime.TotalMilliseconds, 3) + " kB/s";
+            //windowTitle = "Total average bandwidth usage: " + Math.Round((net.client.Statistics.ReceivedBytes + net.client.Statistics.SentBytes) / gameTime.TotalGameTime.TotalMilliseconds, 3) + " kB/s";
             
 
             base.Update(gameTime);
@@ -97,7 +98,7 @@ namespace TeamGame
         {
             GraphicsDevice.Clear(Color.Black);
 
-            Window.Title = windowTitle;
+            // Window.Title = windowTitle;
 
             base.Draw(gameTime);
         }

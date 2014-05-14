@@ -68,6 +68,11 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
+    <Compile Include="BigFont.spritefont">
+      <Name>BigFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <None Include="cursors\cursorBlue.cur">
       <Name>cursorBlue</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

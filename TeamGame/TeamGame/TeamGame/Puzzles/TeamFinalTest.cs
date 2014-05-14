@@ -12,7 +12,7 @@ namespace TeamGame.Puzzles
 {
     public class TeamFinalTest : IPuzzle
     {
-        static Dictionary<Team, int> teamScores = new Dictionary<Team,int>{{Team.t1, 0}, {Team.t2, 0}, {Team.t3, 0}, {Team.t4, 0}};
+        public static Dictionary<Team, int> teamScores = new Dictionary<Team,int>{{Team.t1, 0}, {Team.t2, 0}, {Team.t3, 0}, {Team.t4, 0}};
         Rectangle testArea, circleLarge, circleSmall;
         Vector2 averagePosition;
         int largeRadius, smallRadius;
@@ -41,6 +41,9 @@ namespace TeamGame.Puzzles
             smallDirection = new Vector2(2 * (float)Math.Cos(MathHelper.ToRadians(278)), 2 * (float)Math.Sin(MathHelper.ToRadians(278)));
             circleLarge = new Rectangle(testArea.Center.X - 268 / 2, testArea.Center.Y - 268 / 2, 268, 268);
             circleSmall = new Rectangle(testArea.Center.X - 120 / 2, testArea.Center.Y - 120 / 2, 120, 120);
+
+            foreach (Team t in teamScores.Keys)
+                teamScores[t] = 0;
 
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
