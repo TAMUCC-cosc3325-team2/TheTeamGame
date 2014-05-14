@@ -16,8 +16,7 @@
     <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>ad2e8a01-5b85-40d9-bb32-d93a9d4b4c80</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>
     </Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -104,6 +103,7 @@
     <Compile Include="Puzzles\Transition.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Game.ico" />
     <Content Include="Lidgren.Network.dll" />
   </ItemGroup>
   <ItemGroup>
