@@ -19,7 +19,7 @@ namespace TeamGame.Puzzles
         bool clickedPrev = false;
         SoundEffectInstance readySound, unreadySound;
 
-        public AwaitingParticipants(Game game, Player player)
+        public AwaitingParticipants(Game game, Player player, int score)
             : base(game, player){}
         public override void Initialize() 
         {
