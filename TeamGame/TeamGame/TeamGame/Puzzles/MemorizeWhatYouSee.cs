@@ -14,11 +14,13 @@ namespace TeamGame.Puzzles
     class MemorizeWhatYouSee : IPuzzle
     {
         Texture2D cross, hexagon, square, trapeziod;
+        MouseState mouse;
         List<Color> colorList;
         List<Texture2D> shapeList;
         List<Rectangle> positionList;
         Stopwatch stopWatch;
         Shape[] options = new Shape[4];
+        Shape selected;
         Shape correct;
         Random random = new Random();
 
@@ -61,8 +63,8 @@ namespace TeamGame.Puzzles
             correct = options[random.Next(4)];
 
             //start stopwatch
-            //stopWatch = new Stopwatch();
-            //stopWatch.Start();
+            stopWatch = new Stopwatch();
+            stopWatch.Start();
         }
 
         public override void Initialize()
@@ -75,22 +77,34 @@ namespace TeamGame.Puzzles
             base.Initialize();
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if (stopWatch.ElapsedMilliseconds > 5000)
+            {
+                mouse = Mouse.GetState();
+                if (mouse.LeftButton == ButtonState.Pressed)
+                { }             
+            }
+
+            base.Update(gameTime);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             
             spriteBatch.Begin();
-            //if (stopWatch.ElapsedMilliseconds < 5000)
-            //{
+            if (stopWatch.ElapsedMilliseconds < 5000)
+            {
                 for (int i = 0; i < 4; i++)
                 {
                     spriteBatch.Draw(options[i].texture, options[i].position, options[i].color);
                 }
-            //}
-            //if (stopWatch.Elapsed > review)
-            //{
-            //    spriteBatch.Draw(correct.texture, correct.position, correct.color);
-            //}
+            }
+            if (stopWatch.ElapsedMilliseconds > 5000)
+            {
+                //ask for shape or color
+            }
 
             spriteBatch.End();
 
