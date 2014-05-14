@@ -123,7 +123,7 @@ namespace TeamGame.Puzzles
             Game.Components.Remove(this);
             if (p) // still doing individual puzzles
             {
-                byte randomPuzzle = (byte)(Game1.random.Next(2, 7));
+                byte randomPuzzle = (byte)(Game1.random.Next(15, 16));
                 Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
             }
             else // a team out of status - go to finaltest

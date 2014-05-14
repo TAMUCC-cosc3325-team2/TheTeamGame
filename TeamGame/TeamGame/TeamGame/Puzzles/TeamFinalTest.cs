@@ -23,6 +23,8 @@ namespace TeamGame.Puzzles
         float scale = .9f;
         int score;
 
+        SoundEffectInstance prompt;
+
         MouseState mouse, prevMouse;
 
         /// <summary>
@@ -60,6 +62,8 @@ namespace TeamGame.Puzzles
             smallTexture = Game.Content.Load<Texture2D>("art/smallCircle");
             averageTexture = Game.Content.Load<Texture2D>("art/averagePosition");
             scoreFont = Game.Content.Load<SpriteFont>("ArmyHollow");
+            prompt = Game.Content.Load<SoundEffect>("audio/FinalTestIntro").CreateInstance();
+            prompt.Play();
 
             PlayerExtensions.individualColors = false;
             System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
@@ -110,7 +114,7 @@ namespace TeamGame.Puzzles
             mouse = Mouse.GetState();
 
             #region scale
-            if (countUpdates % 10 == 0)
+            if (countUpdates % 10 == 0 && prompt.State != SoundState.Playing)
             {
                 scale -= .002f;
                 //smallRadius *= scale;
@@ -197,7 +201,8 @@ namespace TeamGame.Puzzles
             }
 
             prevMouse = mouse;
-            countUpdates++;
+            if(prompt.State != SoundState.Playing)
+                countUpdates++;
         }
 
         public new void PuzzleOver(bool p)
