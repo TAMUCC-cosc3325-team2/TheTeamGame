@@ -137,6 +137,8 @@ namespace TeamGame
                 }
                 else if (msg.SequenceChannel == 30) // notified of final test
                 {
+                    if (Game1.pStates[Game1.localPlayer].puzzle is Puzzles.TeamFinalTest)
+                        return;
                     try
                     {
                         Game.Components.Remove(Game1.pStates[Game1.localPlayer].puzzle); Game1.pStates[Game1.localPlayer].puzzle.Dispose();
