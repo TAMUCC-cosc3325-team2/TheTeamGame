@@ -76,12 +76,15 @@ namespace TeamGame
             if (clock.TotalSeconds >= 60)
             {
                 if (Game1.pStates[Game1.localPlayer].puzzle is Puzzles.TeamCirclesInOrder || Game1.pStates[Game1.localPlayer].puzzle is Puzzles.TeamFinalTest || Game1.pStates[Game1.localPlayer].puzzle is Puzzles.AwaitingParticipants || Game1.pStates[Game1.localPlayer].puzzle is Puzzles.StartingGame)
+                {
+                    base.Update(gameTime);
                     return;
+                }
                 startTeamPuzzle = true;
                 clock = new TimeSpan();
                 Game.Components.Remove(Game1.pStates[Game1.localPlayer].puzzle);
-                Game1.pStates[Game1.localPlayer].puzzle.Dispose();
-                Game1.pStates[Game1.localPlayer].puzzle = new Puzzles.TeamCirclesInOrder(Game, Game1.localPlayer);
+                //Game1.pStates[Game1.localPlayer].puzzle.Dispose();
+                //Game1.pStates[Game1.localPlayer].puzzle = new Puzzles.TeamCirclesInOrder(Game, Game1.localPlayer);
             }
 
             base.Update(gameTime);
@@ -137,8 +140,8 @@ namespace TeamGame
                 }
                 else if (msg.SequenceChannel == 30) // notified of final test
                 {
-                    if (Game1.pStates[Game1.localPlayer].puzzle is Puzzles.TeamFinalTest)
-                        return;
+                    //if (Game1.pStates[Game1.localPlayer].puzzle is Puzzles.TeamFinalTest)
+                    //    return;
                     try
                     {
                         Game.Components.Remove(Game1.pStates[Game1.localPlayer].puzzle); Game1.pStates[Game1.localPlayer].puzzle.Dispose();

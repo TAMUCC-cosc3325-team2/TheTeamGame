@@ -92,6 +92,7 @@
     <Compile Include="Puzzles\AwaitingParticipants.cs" />
     <Compile Include="Puzzles\CreateASquare.cs" />
     <Compile Include="Puzzles\DragCircleAvoidBlocks.cs" />
+    <Compile Include="Puzzles\GameOver.cs" />
     <Compile Include="Puzzles\IPuzzle.cs" />
     <Compile Include="Puzzles\MemorizeWhatYouSee.cs" />
     <Compile Include="Puzzles\NumeralSearch.cs" />

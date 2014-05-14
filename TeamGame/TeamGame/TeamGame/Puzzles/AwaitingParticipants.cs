@@ -13,11 +13,12 @@ namespace TeamGame.Puzzles
     class AwaitingParticipants : IPuzzle
     {
         Texture2D readyTexture, notReadyTexture;
+        TimeSpan clock;
         Color[,] checkCollision;
         bool participating = false;
         bool ready = false;
         bool clickedPrev = false;
-        SoundEffectInstance readySound, unreadySound;
+        SoundEffectInstance readySound, unreadySound, awaiting;
         int score = 0;
         SpriteFont font;
 
@@ -32,6 +33,7 @@ namespace TeamGame.Puzzles
             System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
             System.Windows.Forms.Form winForm = ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Game.Window.Handle));
             winForm.Cursor = myCursor;
+            
         }
         public override void Initialize() 
         {
@@ -40,22 +42,32 @@ namespace TeamGame.Puzzles
             unreadySound = Game.Content.Load<SoundEffect>("audio/BeepLow").CreateInstance();
             notReadyTexture = Game.Content.Load<Texture2D>("art/participantNotReady");
             readyTexture = Game.Content.Load<Texture2D>("art/participantReady");
+            awaiting = Game.Content.Load<SoundEffect>("audio/AwaitingParticipants").CreateInstance();
+            
             checkCollision = new Color[readyTexture.Width, readyTexture.Height];
             Color[] temp = new Color[readyTexture.Width * readyTexture.Height];
             readyTexture.GetData(temp);
             for (int i = 0; i < readyTexture.Width; i++)
                 for (int j = 0; j < readyTexture.Height; j++)
                     checkCollision[i, j] = temp[i+ j*readyTexture.Width ];
+
         }
 
         public override void Update(GameTime gameTime) 
         {
             if (!player.IsLocal())
                 return;
-
+            clock += gameTime.ElapsedGameTime;
             bool allReady = true;
             participating = true;
 
+            
+
+            if (clock.TotalSeconds >= 10)
+            {
+                awaiting.Play();
+                clock = new TimeSpan();
+            }
             foreach (PlayerState ps in Game1.pStates.Values)
             {
                 if (!(ps.puzzle is Puzzles.AwaitingParticipants) && !(ps.puzzle is Puzzles.TeamFinalTest))

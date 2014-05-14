@@ -59,6 +59,11 @@ namespace TeamGame
                     puzzle.Visible = true;
                 Game1.gameDifficulty += 0.000003;
                 cursorPosition = Mouse.GetState().Position(); // TODO: Mouse.SetPosition to centre of screen
+                if (Game1.pStates[Game1.localPlayer].puzzle is Puzzles.TeamFinalTest)
+                {
+                    base.Update(gameTime);
+                    return;
+                }
                 this.status = MathHelper.Clamp((float) (this.status - Game1.gameDifficulty), 0, 12);
 
             }

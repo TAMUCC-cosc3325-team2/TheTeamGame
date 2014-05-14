@@ -86,7 +86,8 @@ namespace TeamGame
             { typeof(Puzzles.TeamCirclesInOrder), 10},
             { typeof(Puzzles.TeamFinalTest), 15},
             { typeof(Puzzles.AwaitingParticipants), 20},
-            { typeof(Puzzles.StartingGame), 21}
+            { typeof(Puzzles.StartingGame), 21},
+            { typeof(Puzzles.GameOver), 22}
             };
 
         /// <summary>

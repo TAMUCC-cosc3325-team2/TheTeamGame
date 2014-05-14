@@ -205,7 +205,7 @@ namespace TeamGame.Puzzles
             Game.Components.Remove(this);
 
 
-            Game1.pStates[this.player].puzzle = new Puzzles.AwaitingParticipants(Game, player, score);
+            Game1.pStates[this.player].puzzle = new Puzzles.GameOver(Game, player, score);
         }
 
         public override void Encode(NetOutgoingMessage msg)
