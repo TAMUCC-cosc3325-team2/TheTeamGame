@@ -14,12 +14,14 @@ namespace TeamGame.Puzzles
     {
         public static Dictionary<Team, int> teamScores = new Dictionary<Team,int>{{Team.t1, 0}, {Team.t2, 0}, {Team.t3, 0}, {Team.t4, 0}};
         Rectangle testArea, circleLarge, circleSmall;
-        Vector2 averagePosition;
+        Vector2 averagePosition, smallPosition;
         int largeRadius, smallRadius;
         int countUpdates = 0;
         Texture2D largeTexture, smallTexture, averageTexture;
         SpriteFont scoreFont;
         Vector2 largeDirection, smallDirection;
+        float scale = 1;
+        int score;
 
         MouseState mouse, prevMouse;
 
@@ -106,6 +108,16 @@ namespace TeamGame.Puzzles
 
             mouse = Mouse.GetState();
 
+            #region
+            if (countUpdates % 1 == 0)
+            {
+                scale *= .999f;
+                circleSmall = new Rectangle(circleLarge.X, circleSmall.Y, (int)(smallTexture.Width * scale), (int)(smallTexture.Height * scale));
+
+                smallRadius = circleSmall.Width / 2 + 10;
+            }
+            #endregion
+
             #region increase score
             if ((new Vector2(averagePosition.X - averageTexture.Width / 2, averagePosition.Y - averageTexture.Height / 2) - new Vector2(circleSmall.Center.X, circleSmall.Center.Y)).LengthSquared() <= (smallRadius * smallRadius))
             {
@@ -181,13 +193,22 @@ namespace TeamGame.Puzzles
             circleSmall.Y += (int)smallDirection.Y;
             #endregion
 
+            if (scale <= .27f)
+            {
+                score = Game1.pStates[this.player].score;
+                PuzzleOver(true);
+            }
+
             prevMouse = mouse;
             countUpdates++;
         }
 
         public new void PuzzleOver(bool p)
         {
+            Game.Components.Remove(this);
 
+
+            Game1.pStates[this.player].puzzle = new Puzzles.AwaitingParticipants(Game, player, score);
         }
 
         public override void Encode(NetOutgoingMessage msg)
