@@ -12,17 +12,16 @@ namespace TeamGame.Puzzles
 {
     public class TeamFinalTest : IPuzzle
     {
+        static Dictionary<Team, int> teamScores = new Dictionary<Team,int>{{Team.t1, 0}, {Team.t2, 0}, {Team.t3, 0}, {Team.t4, 0}};
         Rectangle testArea, circleLarge, circleSmall;
-        Vector2 largeVelocity, smallVelocity, averagePosition;
+        Vector2 averagePosition;
         int largeRadius, smallRadius;
-        int score1, score2, score3, score4, countUpdates;
+        int countUpdates = 0;
         Texture2D largeTexture, smallTexture, averageTexture;
         SpriteFont scoreFont;
         Vector2 largeDirection, smallDirection;
 
         MouseState mouse, prevMouse;
-
-        SoundEffectInstance blip;
 
         /// <summary>
         /// Final team puzzle. Welcome to the end.
@@ -34,11 +33,6 @@ namespace TeamGame.Puzzles
         {
             testArea = new Rectangle(0, 0, 1024, 724);
 
-            smallVelocity = new Vector2((float)Game1.random.NextDouble() - 0.5f, (float)Game1.random.NextDouble() - 0.5f);
-            smallVelocity.Normalize();
-            largeVelocity = new Vector2((float)Game1.random.NextDouble() - 0.5f, (float)Game1.random.NextDouble() - 0.5f);
-            largeVelocity.Normalize();
-
             //largePosition = new Vector2(testArea.Center.X, testArea.Center.Y);
             //smallPosition = new Vector2(0, 0);
             averagePosition = new Vector2(0, 0);
@@ -48,17 +42,9 @@ namespace TeamGame.Puzzles
             circleLarge = new Rectangle(testArea.Center.X - 268 / 2, testArea.Center.Y - 268 / 2, 268, 268);
             circleSmall = new Rectangle(testArea.Center.X - 120 / 2, testArea.Center.Y - 120 / 2, 120, 120);
 
-            foreach (Player p in player.TeamList())
-            {
-                if (p.TeamOf() == Team.t1)
-                    score1 += Game1.pStates[p].score;
-                else if (p.TeamOf() == Team.t2)
-                    score2 += Game1.pStates[p].score;
-                else if (p.TeamOf() == Team.t3)
-                    score3 += Game1.pStates[p].score;
-                else if (p.TeamOf() == Team.t4)
-                    score4 += Game1.pStates[p].score;
-            }
+            foreach (Player p in Enum.GetValues(typeof(Player)))
+                if (p != Player.None)
+                    teamScores[p.TeamOf()] += Game1.pStates[p].score;
 
             smallRadius = circleSmall.Width / 2 + 10;
             largeRadius = circleLarge.Width / 2;
@@ -70,55 +56,57 @@ namespace TeamGame.Puzzles
             smallTexture = Game.Content.Load<Texture2D>("art/smallCircle");
             averageTexture = Game.Content.Load<Texture2D>("art/averagePosition");
             scoreFont = Game.Content.Load<SpriteFont>("ArmyHollow");
-            blip = Game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
-            blip.Volume = .5f;
 
-            //PlayerExtensions.individualColors = false;
+            PlayerExtensions.individualColors = false;
             System.Windows.Forms.Cursor myCursor = Extensions.LoadCustomCursor("Content/cursors/cursor" + Game1.localPlayer.ColorName() + ".cur");
             System.Windows.Forms.Form winForm = ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Game.Window.Handle));
             winForm.Cursor = myCursor;
             
-
         }
 
         public override void Draw(GameTime gameTime)
         {
             //No healthbar in final test
             //base.Draw(gameTime); // draw healthbar
+            if (!player.IsLocal())
+                return;
 
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null);
             spriteBatch.Draw(largeTexture, circleLarge, Color.White);
             spriteBatch.Draw(largeTexture, circleSmall, Color.White);
-            spriteBatch.Draw(averageTexture, averagePosition, player.TeamOf().ColorOf());
-            spriteBatch.DrawString(scoreFont, score1.ToString(), Vector2.Zero, Player.t1p1.ColorOf());
-            spriteBatch.DrawString(scoreFont, score2.ToString(), new Vector2(testArea.Width, 0) - scoreFont.MeasureString(score2.ToString()), Player.t2p1.ColorOf());
-            spriteBatch.DrawString(scoreFont, score3.ToString(), new Vector2(0, scoreFont.MeasureString(score3.ToString()).Y), Player.t3p1.ColorOf());
-            spriteBatch.DrawString(scoreFont, score4.ToString(), new Vector2(testArea.Width, testArea.Height) - scoreFont.MeasureString(score4.ToString()), Player.t4p1.ColorOf());
+            spriteBatch.Draw(averageTexture, averagePosition - new Vector2(9, 9), player.ColorOf());
+            spriteBatch.DrawString(scoreFont, teamScores[Team.t1].ToString(), new Vector2(12, 12), Player.t1p1.ColorOf());
+            spriteBatch.DrawString(scoreFont, teamScores[Team.t2].ToString(), new Vector2(1012 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).X, 12), Player.t2p1.ColorOf());
+            spriteBatch.DrawString(scoreFont, teamScores[Team.t3].ToString(), new Vector2(12, 712 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).Y), Player.t3p1.ColorOf());
+            spriteBatch.DrawString(scoreFont, teamScores[Team.t4].ToString(), new Vector2(1012 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).X, 712 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).Y), Player.t4p1.ColorOf());
             spriteBatch.End();
+           
         }
-
+            
         public override void Update(GameTime gameTime)
         {
             #region UpdateAverage
             if (player.ID() != Game1.localPlayer.ID()) // only update averageTexture once per team
                 return;
-            averagePosition = new Vector2(-9, -9);
+            List<Player> teamInGame = new List<Player>();
             foreach (Player p in player.TeamList())
-                averagePosition += Game1.pStates[p].cursorPosition * .25f;
+                if (Game1.pStates[p].puzzle is Puzzles.TeamFinalTest)
+                    teamInGame.Add(p);
+            averagePosition = new Vector2(0,0);
+            foreach (Player p in teamInGame)
+                averagePosition += Game1.pStates[p].cursorPosition / teamInGame.Count;
             #endregion
 
             if (player != Game1.localPlayer)
                 return;
 
             mouse = Mouse.GetState();
-            if (mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton == ButtonState.Released)
-                blip.Play();
 
             #region increase score
             if ((new Vector2(averagePosition.X - averageTexture.Width / 2, averagePosition.Y - averageTexture.Height / 2) - new Vector2(circleSmall.Center.X, circleSmall.Center.Y)).LengthSquared() <= (smallRadius * smallRadius))
             {
-                if (countUpdates % 1 == 0)
+                /*if (countUpdates % 1 == 0)
                 {
                     switch (player.TeamOf())
                     {
@@ -135,7 +123,13 @@ namespace TeamGame.Puzzles
                             score4++;
                             break;
                     }
-                }
+                }*/
+                bool scoring = true;
+                foreach (Player p in teamInGame)
+                    if ((Game1.pStates[p].cursorPosition - circleLarge.Center.ToVector2()).LengthSquared() < largeRadius * largeRadius)
+                        scoring = false;
+                if (scoring)
+                    teamScores[this.player.TeamOf()]++;
             }
             #endregion
 
@@ -184,8 +178,6 @@ namespace TeamGame.Puzzles
             circleSmall.Y += (int)smallDirection.Y;
             #endregion
 
-            if (countUpdates == int.MaxValue)
-                countUpdates = 1;
             prevMouse = mouse;
             countUpdates++;
         }
@@ -197,32 +189,35 @@ namespace TeamGame.Puzzles
 
         public override void Encode(NetOutgoingMessage msg)
         {
-            /* not necessary yet
-            msg.Write((int)circleLarge.X);
-            msg.Write((int)circleLarge.Y);
-            msg.Write((int)circleSmall.X);
-            msg.Write((int)circleSmall.Y);
-            msg.Write((int)score1);
-            msg.Write((int)score2);
-            msg.Write((int)score3);
-            msg.Write((int)score4);
-            msg.Write((int)averagePosition.X);
-            msg.Write((int)averagePosition.Y); */
+            msg.Write((Int32) teamScores[this.player.TeamOf()]);
+            msg.Write((Int32) countUpdates);
+            msg.Write((short) this.circleLarge.Location.X);
+            msg.Write((short) this.circleLarge.Location.Y);
+            msg.Write((short)this.circleSmall.Location.X);
+            msg.Write((short)this.circleSmall.Location.Y);
+            msg.Write(largeDirection.X);
+            msg.Write(largeDirection.Y);
+            msg.Write(smallDirection.X);
+            msg.Write(smallDirection.Y);
         }
 
         public override void Decode(NetIncomingMessage msg)
         {
-            /* not necessary yet
-            circleLarge.X = msg.ReadInt32();
-            circleLarge.Y = msg.ReadInt32();
-            circleSmall.X = msg.ReadInt32();
-            circleSmall.Y = msg.ReadInt32();
-            score1 = msg.ReadInt32();
-            score2 = msg.ReadInt32();
-            score3 = msg.ReadInt32();
-            score4 = msg.ReadInt32();
-            averagePosition.X = msg.ReadInt32();
-            averagePosition.Y = msg.ReadInt32();*/
+            int temp = msg.ReadInt32();
+            if (temp > teamScores[player.TeamOf()])
+                teamScores[this.player.TeamOf()] = temp;
+            temp = msg.ReadInt32();
+            TeamFinalTest LPuzzle = ((TeamFinalTest)Game1.pStates[Game1.localPlayer].puzzle);
+            if (LPuzzle.countUpdates < temp)
+            {
+                LPuzzle.countUpdates = temp;
+                LPuzzle.circleLarge.Location = new Point(msg.ReadInt16(), msg.ReadInt16());
+                LPuzzle.circleSmall.Location = new Point(msg.ReadInt16(), msg.ReadInt16());
+                LPuzzle.largeDirection.X = msg.ReadFloat();
+                LPuzzle.largeDirection.Y = msg.ReadFloat();
+                LPuzzle.smallDirection.X = msg.ReadFloat();
+                LPuzzle.smallDirection.Y = msg.ReadFloat();
+            }
         }
     }
 }

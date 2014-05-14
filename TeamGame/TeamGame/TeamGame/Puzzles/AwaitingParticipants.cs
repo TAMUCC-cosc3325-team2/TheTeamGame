@@ -17,11 +17,14 @@ namespace TeamGame.Puzzles
         bool participating = false;
         bool ready = false;
         bool clickedPrev = false;
+        SoundEffectInstance readySound, unreadySound;
 
         public AwaitingParticipants(Game game, Player player)
             : base(game, player){}
         public override void Initialize() 
         {
+            readySound = Game.Content.Load<SoundEffect>("audio/BeepHigh").CreateInstance();
+            unreadySound = Game.Content.Load<SoundEffect>("audio/BeepLow").CreateInstance();
             notReadyTexture = Game.Content.Load<Texture2D>("art/participantNotReady");
             readyTexture = Game.Content.Load<Texture2D>("art/participantReady");
             checkCollision = new Color[readyTexture.Width, readyTexture.Height];
@@ -65,8 +68,14 @@ namespace TeamGame.Puzzles
                 clickedPrev = true;
 
                 Vector2 mousePos = Mouse.GetState().Position() - player.GetRegion().Location.ToVector2();
-                if (checkCollision[(int) mousePos.X, (int) mousePos.Y].A > 0)
+                if (checkCollision[(int)mousePos.X, (int)mousePos.Y].A > 0)
+                {
                     ready = !ready; // toggle
+                    if (ready)
+                        readySound.Play();
+                    else
+                        unreadySound.Play();
+                }
             }
             else
                 clickedPrev = false;

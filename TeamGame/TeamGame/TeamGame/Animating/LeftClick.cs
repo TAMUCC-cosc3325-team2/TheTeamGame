@@ -11,7 +11,7 @@ namespace TeamGame
     public class LeftClick : Animation
     {
         public LeftClick(Game game, Player player)
-            : base(game, player, game.Content.Load<Texture2D>("art/buttonPulseSheet2"), 30, 30)
+            : base(game, player, game.Content.Load<Texture2D>("art/buttonPulseSheet1"), 30, 30)
         {
             sEffect = game.Content.Load<SoundEffect>("audio/buttonBeep").CreateInstance();
             sEffect.Volume = .5f;
@@ -23,7 +23,7 @@ namespace TeamGame
         {
             base.pos = location;
             base.AnimationStat = Status.Playing;
-            base.Draw(gameTime);
+            sEffect.Play();
         }
 
 

@@ -54,17 +54,24 @@ namespace TeamGame
         public virtual void PuzzleOver(bool Correct) {}
         public override void Draw(GameTime gameTime)
         {
+            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(Game.Content.Load<Texture2D>("art/playerBorder"), player.GetRegion().Location.ToVector2() + new Vector2(-4, -4), player.ColorOf());
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
+            spriteBatch.Draw(statusBarTexture, new Vector2(53, 163), new Rectangle(12 * (int) (12 - Game1.pStates[player].status), 0, 144, 12), player.ColorOf());
+            spriteBatch.End();
+
+            if (!player.IsLocal())
+                return;
+
             if (Game1.pStates[player].status == 0 && !statusZeroPlayed)
             {
                 statusZero.Play();
                 statusZeroPlayed = true;
             }
-
-            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, this.matrix);
-            spriteBatch.Draw(statusBarTexture, new Vector2(53, 163), new Rectangle(12 * (int) (12 - Game1.pStates[player].status), 0, 144, 12), player.ColorOf());
-            spriteBatch.End();
         }
     }
     public static class IPuzzleHelper

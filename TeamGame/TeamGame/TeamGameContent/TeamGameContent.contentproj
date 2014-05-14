@@ -292,13 +292,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\buttonBeep.wav">
-      <Name>buttonBeep</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="art\buttonPulseSheet2.png">
       <Name>buttonPulseSheet2</Name>
       <Importer>TextureImporter</Importer>
@@ -370,6 +363,34 @@
   <ItemGroup>
     <Compile Include="art\playerBorder.png">
       <Name>playerBorder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="audio\BeepHigh.wav">
+      <Name>BeepHigh</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="audio\BeepLow.wav">
+      <Name>BeepLow</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="audio\buttonBeep.wav">
+      <Name>buttonBeep</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="art\buttonPulseSheet1.png">
+      <Name>buttonPulseSheet1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -100,10 +100,10 @@ namespace TeamGame.Puzzles
             ball = Game.Content.Load<Texture2D>("art/dragableBall");
             block1 = Game.Content.Load<Texture2D>("art/avoidBlock");
             block2 = Game.Content.Load<Texture2D>("art/avoidBlock");
-
+            prompt = Game.Content.Load<SoundEffect>("audio/DragTheCircles").CreateInstance();
             if (player == Game1.localPlayer)
             {
-                prompt = Game.Content.Load<SoundEffect>("audio/DragTheCircles").CreateInstance();
+                
                 prompt.Play();
             }
 

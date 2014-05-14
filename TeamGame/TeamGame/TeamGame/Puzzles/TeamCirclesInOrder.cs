@@ -123,6 +123,7 @@ namespace TeamGame.Puzzles
                     {
                         if (b == this.buttons[0] && buttonText[0] == TeamCirclesInOrderHelper.nextToClick) // correct
                         {
+                            buttonClicked = b;
                             buttons.RemoveAt(0);
                             buttonText.RemoveAt(0);
                             correct = true;
@@ -150,6 +151,7 @@ namespace TeamGame.Puzzles
             msg.Write(buttonClicked); // buttonClicked = 255;
             if (buttonClicked != 255)
                 msg.Write(correct);
+            buttonClicked = 255;
             foreach (byte b in buttons)
                 msg.Write(b);
             for (int i = 5; i > buttons.Count; i--)
@@ -164,6 +166,8 @@ namespace TeamGame.Puzzles
             buttonClicked = msg.ReadByte();
             if (buttonClicked != 255)
             {
+                
+                spawnAnimation(new Vector2(buttonPos(buttonClicked).X + 18, buttonPos(buttonClicked).Y + 18), msg.ReadBoolean());
                 buttonClicked = 255;
             }
             

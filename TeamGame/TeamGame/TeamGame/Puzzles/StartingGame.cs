@@ -48,11 +48,15 @@ namespace TeamGame.Puzzles
             Game1.pStates[this.player].puzzle = new Puzzles.Transition(Game, player);
             ((Puzzles.Transition)Game1.pStates[this.player].puzzle).starting = true;
             ((Puzzles.Transition)Game1.pStates[this.player].puzzle).countUpdates = 60;
+            ((Net)Game.Services.GetService(typeof(Net))).clock = new TimeSpan();
         }
 
         public override void Draw(GameTime gameTime)
         {
-
+            SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            spriteBatch.Begin();
+            spriteBatch.Draw(Game.Content.Load<Texture2D>("art/playerBorder"), player.GetRegion().Location.ToVector2() + new Vector2(-4, -4), player.ColorOf());
+            spriteBatch.End();
         }
     }
 }

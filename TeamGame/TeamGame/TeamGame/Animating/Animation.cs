@@ -59,10 +59,6 @@ namespace TeamGame
         { 
             if(AnimationStat == Status.Playing)
             {
-                if (hasSoundEffect && sEffect.State != SoundState.Playing)
-                {
-                    sEffect.Play();
-                }
                 if (frame < 0)
                     frame++;
                 frame++;
@@ -84,7 +80,7 @@ namespace TeamGame
         {
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             if(frame >= 0)
                 spriteBatch.Draw(textureSheet, pos, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), player.ColorOf(), 0f, new Vector2(frameWidth/2, frameHeight/2), scale, SpriteEffects.None, 0f);
             spriteBatch.End();
