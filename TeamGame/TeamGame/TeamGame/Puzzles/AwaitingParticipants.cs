@@ -58,7 +58,7 @@ namespace TeamGame.Puzzles
 
             foreach (PlayerState ps in Game1.pStates.Values)
             {
-                if (!(ps.puzzle is Puzzles.AwaitingParticipants))
+                if (!(ps.puzzle is Puzzles.AwaitingParticipants && !(ps.puzzle is Puzzles.TeamFinalTest)))
                 {
                     allReady = true;
                     break;

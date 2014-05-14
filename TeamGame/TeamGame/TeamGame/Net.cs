@@ -44,8 +44,8 @@ namespace TeamGame
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
                 {
-                    Game1.pStates[p].puzzle = new Puzzles.AwaitingParticipants(Game, p);
-                    //((Puzzles.Transition)Game1.pStates[p].puzzle).starting = true;
+                    Game1.pStates[p].puzzle = new Puzzles.Transition(Game, p);
+                    ((Puzzles.Transition)Game1.pStates[p].puzzle).starting = true;
                 }
 
         }
@@ -134,6 +134,10 @@ namespace TeamGame
                         Game1.pStates[Game1.localPlayer].puzzle.Dispose();
                         Game1.pStates[Game1.localPlayer].puzzle = new Puzzles.TeamCirclesInOrder(Game, Game1.localPlayer);
                     }
+                }
+                else if (msg.SequenceChannel == 30) // notified of final test
+                {
+
                 }
             }
             else

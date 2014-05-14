@@ -89,7 +89,19 @@ namespace TeamGame.Puzzles
         public override void Update(GameTime gameTime)
         {
             if (countUpdates == 0 && Game1.pStates[player].status > 0)
-                    PuzzleOver(true);
+                PuzzleOver(true);
+            else
+            {
+                bool allDead = true;
+                foreach (Player P in player.TeamList())
+                    if (Game1.pStates[P].status > 0)
+                        allDead = false;
+                if (allDead)
+                {
+                    PuzzleOver(false);
+                    return;
+                }
+            }
             displacement *= 1.05f;
             fadeAlpha += fadeStep;
             if (fadeAlpha >= 300)
@@ -109,8 +121,16 @@ namespace TeamGame.Puzzles
         public new void PuzzleOver(bool p)
         {
             Game.Components.Remove(this);
-            byte randomPuzzle = (byte)(Game1.random.Next(2,6));
-            Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
+            if (p) // still doing individual puzzles
+            {
+                byte randomPuzzle = (byte)(Game1.random.Next(15, 16));
+                Game1.pStates[this.player].puzzle = randomPuzzle.CreateFromID(this.Game, this.player);
+            }
+            else // a team out of status - go to finaltest
+            {
+                ((Net)Game.Services.GetService(typeof(Net))).client.SendMessage(((Net)Game.Services.GetService(typeof(Net))).client.CreateMessage(), NetDeliveryMethod.ReliableOrdered, 30);
+                Game1.pStates[this.player].puzzle = new Puzzles.TeamFinalTest(this.Game, this.player);
+            }
         }
 
         public override void Encode(NetOutgoingMessage msg)

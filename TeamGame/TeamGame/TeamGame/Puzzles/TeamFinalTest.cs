@@ -15,7 +15,7 @@ namespace TeamGame.Puzzles
         public static Dictionary<Team, int> teamScores = new Dictionary<Team,int>{{Team.t1, 0}, {Team.t2, 0}, {Team.t3, 0}, {Team.t4, 0}};
         Rectangle testArea, circleLarge, circleSmall;
         Vector2 averagePosition, smallPosition;
-        int largeRadius, smallRadius;
+        double largeRadius, smallRadius;
         int countUpdates = 0;
         Texture2D largeTexture, smallTexture, averageTexture;
         SpriteFont scoreFont;
@@ -36,22 +36,21 @@ namespace TeamGame.Puzzles
             testArea = new Rectangle(0, 0, 1024, 724);
 
             //largePosition = new Vector2(testArea.Center.X, testArea.Center.Y);
-            //smallPosition = new Vector2(0, 0);
+            smallPosition = new Vector2(0, 0);
             averagePosition = new Vector2(0, 0);
 
             largeDirection = new Vector2(2 * (float)Math.Cos(MathHelper.ToRadians(30)), 2 * (float)Math.Sin(MathHelper.ToRadians(30)));
             smallDirection = new Vector2(2 * (float)Math.Cos(MathHelper.ToRadians(278)), 2 * (float)Math.Sin(MathHelper.ToRadians(278)));
             circleLarge = new Rectangle(testArea.Center.X - 268 / 2, testArea.Center.Y - 268 / 2, 268, 268);
-            circleSmall = new Rectangle(testArea.Center.X - 120 / 2, testArea.Center.Y - 120 / 2, 120, 120);
+            //circleSmall = new Rectangle(testArea.Center.X - 120 / 2, testArea.Center.Y - 120 / 2, 120, 120);
 
-            foreach (Team t in teamScores.Keys)
-                teamScores[t] = 0;
+            teamScores[Team.t1] = teamScores[Team.t2] = teamScores[Team.t3] = teamScores[Team.t4] = 0;
 
             foreach (Player p in Enum.GetValues(typeof(Player)))
                 if (p != Player.None)
                     teamScores[p.TeamOf()] += Game1.pStates[p].score;
 
-            smallRadius = circleSmall.Width / 2 + 10;
+            smallRadius = 60;
             largeRadius = circleLarge.Width / 2;
         }
 
@@ -73,18 +72,20 @@ namespace TeamGame.Puzzles
         {
             //No healthbar in final test
             //base.Draw(gameTime); // draw healthbar
-            if (!player.IsLocal())
-                return;
+            
 
             SpriteBatch spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             spriteBatch.Begin(SpriteSortMode.Deferred, null);
-            spriteBatch.Draw(largeTexture, circleLarge, Color.White);
-            spriteBatch.Draw(largeTexture, circleSmall, Color.White);
             spriteBatch.Draw(averageTexture, averagePosition - new Vector2(9, 9), player.ColorOf());
-            spriteBatch.DrawString(scoreFont, teamScores[Team.t1].ToString(), new Vector2(12, 12), Player.t1p1.ColorOf());
-            spriteBatch.DrawString(scoreFont, teamScores[Team.t2].ToString(), new Vector2(1012 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).X, 12), Player.t2p1.ColorOf());
-            spriteBatch.DrawString(scoreFont, teamScores[Team.t3].ToString(), new Vector2(12, 712 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).Y), Player.t3p1.ColorOf());
-            spriteBatch.DrawString(scoreFont, teamScores[Team.t4].ToString(), new Vector2(1012 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).X, 712 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).Y), Player.t4p1.ColorOf());
+            if (player.IsLocal())
+            {
+                spriteBatch.Draw(largeTexture, circleLarge, Color.White);
+                spriteBatch.Draw(smallTexture, smallPosition + circleLarge.Center.ToVector2(), null, Color.White, 0f, new Vector2(smallTexture.Width / 2, smallTexture.Height / 2), new Vector2(scale), SpriteEffects.None, 0.1f);
+                spriteBatch.DrawString(scoreFont, teamScores[Team.t1].ToString(), new Vector2(12, 12), Player.t1p1.ColorOf());
+                spriteBatch.DrawString(scoreFont, teamScores[Team.t2].ToString(), new Vector2(1012 - scoreFont.MeasureString(teamScores[Team.t1].ToString()).X, 12), Player.t2p1.ColorOf());
+                spriteBatch.DrawString(scoreFont, teamScores[Team.t3].ToString(), new Vector2(12, 712 - scoreFont.MeasureString(teamScores[Team.t2].ToString()).Y), Player.t3p1.ColorOf());
+                spriteBatch.DrawString(scoreFont, teamScores[Team.t4].ToString(), new Vector2(1012 - scoreFont.MeasureString(teamScores[Team.t4].ToString()).X, 712 - scoreFont.MeasureString(teamScores[Team.t4].ToString()).Y), Player.t4p1.ColorOf());
+            }
             spriteBatch.End();
            
         }
@@ -92,8 +93,8 @@ namespace TeamGame.Puzzles
         public override void Update(GameTime gameTime)
         {
             #region UpdateAverage
-            if (player.ID() != Game1.localPlayer.ID()) // only update averageTexture once per team
-                return;
+            //if (player.ID() != Game1.localPlayer.ID()) // only update averageTexture once per team
+                //return;
             List<Player> teamInGame = new List<Player>();
             foreach (Player p in player.TeamList())
                 if (Game1.pStates[p].puzzle is Puzzles.TeamFinalTest)
@@ -108,18 +109,16 @@ namespace TeamGame.Puzzles
 
             mouse = Mouse.GetState();
 
-            #region
-            if (countUpdates % 1 == 0)
+            #region scale
+            if (countUpdates % 10 == 0)
             {
-                scale *= .999f;
-                circleSmall = new Rectangle(circleLarge.X, circleSmall.Y, (int)(smallTexture.Width * scale), (int)(smallTexture.Height * scale));
-
-                smallRadius = circleSmall.Width / 2 + 10;
+                scale -= .002f;
+                //smallRadius *= scale;
             }
             #endregion
 
             #region increase score
-            if ((new Vector2(averagePosition.X - averageTexture.Width / 2, averagePosition.Y - averageTexture.Height / 2) - new Vector2(circleSmall.Center.X, circleSmall.Center.Y)).LengthSquared() <= (smallRadius * smallRadius))
+            if ((new Vector2(averagePosition.X - averageTexture.Width / 2, averagePosition.Y - averageTexture.Height / 2) - smallPosition - circleLarge.Center.ToVector2()).LengthSquared() <= (smallRadius * smallRadius))
             {
                 /*if (countUpdates % 1 == 0)
                 {
@@ -166,14 +165,15 @@ namespace TeamGame.Puzzles
 
             #region bounce small circle
             //vectors to represent the center of both circles
-            Vector2 lCircle = new Vector2(circleLarge.Center.X, circleLarge.Center.Y);
-            Vector2 sCircle = new Vector2(circleSmall.Center.X, circleSmall.Center.Y);
+            //Vector2 lCircle = new Vector2(circleLarge.Center.X, circleLarge.Center.Y);
+            //Vector2 sCircle = new Vector2(circleSmall.Center.X, circleSmall.Center.Y);
 
-            //if (difference_between_centers_of_circles^2 >= radius^2) then collision has happened
-            if ((lCircle - sCircle).LengthSquared() >= smallRadius * smallRadius)
+            if (smallPosition.Length() + smallRadius*scale > largeRadius)
             {
                 //flip the small circle's velocity
-                smallDirection = -smallDirection;
+                smallDirection *= -1;
+                smallDirection = Vector2.Transform(smallDirection, Matrix.CreateRotationZ((float) (Math.PI / 12)));
+                smallPosition += smallDirection;
             }
             #endregion
 
@@ -186,11 +186,8 @@ namespace TeamGame.Puzzles
             //cast vector to int required by rectangle location
             circleLarge.X = (int)vtemp.X;
             circleLarge.Y = (int)vtemp.Y;
-            circleSmall.X = (int)vtemp2.X;
-            circleSmall.Y = (int)vtemp2.Y;
             //move small circle based by it's velocity
-            circleSmall.X += (int)smallDirection.X;
-            circleSmall.Y += (int)smallDirection.Y;
+            smallPosition += smallDirection;
             #endregion
 
             if (scale <= .27f)
@@ -217,12 +214,13 @@ namespace TeamGame.Puzzles
             msg.Write((Int32) countUpdates);
             msg.Write((short) this.circleLarge.Location.X);
             msg.Write((short) this.circleLarge.Location.Y);
-            msg.Write((short)this.circleSmall.Location.X);
-            msg.Write((short)this.circleSmall.Location.Y);
+            msg.Write(smallPosition.X);
+            msg.Write(smallPosition.Y);
             msg.Write(largeDirection.X);
             msg.Write(largeDirection.Y);
             msg.Write(smallDirection.X);
             msg.Write(smallDirection.Y);
+            msg.Write(scale);
         }
 
         public override void Decode(NetIncomingMessage msg)
@@ -236,11 +234,12 @@ namespace TeamGame.Puzzles
             {
                 LPuzzle.countUpdates = temp;
                 LPuzzle.circleLarge.Location = new Point(msg.ReadInt16(), msg.ReadInt16());
-                LPuzzle.circleSmall.Location = new Point(msg.ReadInt16(), msg.ReadInt16());
+                LPuzzle.smallPosition = new Vector2(msg.ReadFloat(), msg.ReadFloat());
                 LPuzzle.largeDirection.X = msg.ReadFloat();
                 LPuzzle.largeDirection.Y = msg.ReadFloat();
                 LPuzzle.smallDirection.X = msg.ReadFloat();
                 LPuzzle.smallDirection.Y = msg.ReadFloat();
+                LPuzzle.scale = msg.ReadFloat();
             }
         }
     }
