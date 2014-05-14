@@ -88,7 +88,7 @@ namespace TeamGame.Puzzles
 
         public override void Update(GameTime gameTime)
         {
-            if (countUpdates == 0 && Game1.pStates[player].status > 0)
+            if (countUpdates <= 0 && Game1.pStates[player].status > 0)
                 PuzzleOver(true);
             else
             {
